@@ -1,5 +1,6 @@
 package com.example.appbanhang.retrofit;
 
+import com.example.appbanhang.model.NewProductModel;
 import com.example.appbanhang.model.TypeProduct;
 
 import java.util.ArrayList;
@@ -12,5 +13,7 @@ import retrofit2.http.GET;
 public interface APIBanHang {
     @GET("typeProduct")
     Observable<TypeProductModel> getTypeProduct();
+    @GET("newProduct")
+    Observable<NewProductModel> getNewProducts();
 
 }

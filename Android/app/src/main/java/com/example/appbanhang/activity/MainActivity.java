@@ -21,11 +21,15 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
+import com.example.appbanhang.adapter.NewProductAdapter;
 import com.example.appbanhang.adapter.TypeProductAdapter;
+import com.example.appbanhang.model.NewProduct;
+import com.example.appbanhang.model.NewProductModel;
 import com.example.appbanhang.model.TypeProduct;
 import com.example.appbanhang.retrofit.APIBanHang;
 import com.example.appbanhang.retrofit.RetrofitClient;
@@ -52,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     TypeProductAdapter typeProductAdapter;
     List<TypeProduct> typeProducts;
+    List<NewProduct> listNewProduct;
+    NewProductAdapter newProductAdapter;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     APIBanHang apiBanHang;
     @Override
@@ -67,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "OK", Toast.LENGTH_LONG).show();
             ActionViewFlipper();
             getTypeProduct();
+            getNewProduct();
         }
         else {
             Toast.makeText(getApplicationContext(), "Not connected internet", Toast.LENGTH_LONG).show();
@@ -78,7 +85,23 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
     }
-
+    public void  getNewProduct(){
+        compositeDisposable.add(apiBanHang.getNewProducts()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        newProductModel -> {
+                            listNewProduct = newProductModel.getResults();
+                            System.out.println(listNewProduct);
+                            newProductAdapter = new NewProductAdapter(getApplicationContext(), listNewProduct);
+                            recyclerViewManHinhChinh.setAdapter(newProductAdapter);
+                        },
+                        throwable -> {
+                            Toast.makeText(getApplicationContext(), "Không kết nối được với server"+ throwable.getMessage(),Toast.LENGTH_LONG).show(); ;
+                        }
+                )
+        );
+    }
    public void getTypeProduct(){
         compositeDisposable.add(apiBanHang.getTypeProduct()
                 .subscribeOn(Schedulers.io())
@@ -102,11 +125,17 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarmanhinhchinh);
         viewFlipper = findViewById(R.id.viewflipper);
         recyclerViewManHinhChinh = findViewById(R.id.recycleview);
+//        lab8
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
+        recyclerViewManHinhChinh.setLayoutManager(layoutManager);
+        recyclerViewManHinhChinh.setHasFixedSize(true);
         navigationView = findViewById(R.id.navigationview);
         listViewManHinhChinh = findViewById(R.id.listviewmanhinhchinh);
         drawerLayout = findViewById((R.id.drawerlayout));
-//        Khởi tạo adapter
+//        Khởi tạo list
         typeProducts = new ArrayList<>();
+//        Khoi tạo list
+        listNewProduct = new ArrayList<>();
 
     }
     // Check connect internet
