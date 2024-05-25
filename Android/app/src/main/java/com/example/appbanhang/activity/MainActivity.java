@@ -1,6 +1,7 @@
 package com.example.appbanhang.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.telecom.Call;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     NewProductAdapter newProductAdapter;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     APIBanHang apiBanHang;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
             ActionViewFlipper();
             getTypeProduct();
             getNewProduct();
+            getEventClick();
         }
         else {
             Toast.makeText(getApplicationContext(), "Not connected internet", Toast.LENGTH_LONG).show();
@@ -85,6 +89,21 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
     }
+
+    private void getEventClick() {
+        listViewManHinhChinh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                switch (position){
+//                    case 0:
+//                        Integer home = new Intent(getApplicationContext(), MainActivity.class);
+//                        startActivities(home);
+//                        break;
+//                }
+            }
+        });
+    }
+
     public void  getNewProduct(){
         compositeDisposable.add(apiBanHang.getNewProducts()
                 .subscribeOn(Schedulers.io())

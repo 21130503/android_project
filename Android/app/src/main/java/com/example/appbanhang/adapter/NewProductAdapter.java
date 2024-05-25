@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
 import com.example.appbanhang.model.NewProduct;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class NewProductAdapter extends RecyclerView.Adapter<NewProductAdapter.MyViewAdapter> {
@@ -36,7 +37,8 @@ public class NewProductAdapter extends RecyclerView.Adapter<NewProductAdapter.My
     public void onBindViewHolder(@NonNull MyViewAdapter holder, int position) {
         NewProduct newProduct = listNewProduct.get(position);
         holder.name.setText(newProduct.getName());
-        holder.price.setText(String.valueOf(newProduct.getPrice()));
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        holder.price.setText("Giá "+ decimalFormat.format(newProduct.getPrice())+ "VNĐ");
         Glide.with(context).load(newProduct.getImage()).into(holder.image);
     }
 
