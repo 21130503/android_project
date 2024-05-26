@@ -94,12 +94,20 @@ public class MainActivity extends AppCompatActivity {
         listViewManHinhChinh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                switch (position){
-//                    case 0:
-//                        Integer home = new Intent(getApplicationContext(), MainActivity.class);
-//                        startActivities(home);
-//                        break;
-//                }
+                switch (position){
+                    case 0:
+                        Intent home = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(home);
+                        break;
+                    case 1:
+                        Intent phone = new Intent(getApplicationContext(), PhoneActivity.class);
+                        startActivity(phone);
+                        break;
+                    case 2:
+                        Intent laptop = new Intent(getApplicationContext(), LaptopActivity.class);
+                        startActivity(laptop);
+                        break;
+                }
             }
         });
     }
