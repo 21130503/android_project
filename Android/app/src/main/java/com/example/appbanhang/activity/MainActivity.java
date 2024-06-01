@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     NewProductAdapter newProductAdapter;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     APIBanHang apiBanHang;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,12 +101,14 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(home);
                         break;
                     case 1:
-                        Intent phone = new Intent(getApplicationContext(), PhoneActivity.class);
-                        startActivity(phone);
-                        break;
-                    case 2:
                         Intent laptop = new Intent(getApplicationContext(), LaptopActivity.class);
                         startActivity(laptop);
+                        break;
+                    case 2:
+                        Intent phone = new Intent(getApplicationContext(), PhoneActivity.class);
+                        phone.putExtra("type",1);
+
+                        startActivity(phone);
                         break;
                 }
             }
@@ -163,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
         typeProducts = new ArrayList<>();
 //        Khoi tạo list
         listNewProduct = new ArrayList<>();
+
 
     }
     // Check connect internet

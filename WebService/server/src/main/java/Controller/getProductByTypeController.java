@@ -20,6 +20,7 @@ public class getProductByTypeController extends HttpServlet {
         Gson gson = new Gson();
         int page  = Integer.parseInt(req.getParameter("page"));
         int idTypeProduct =  Integer.parseInt(req.getParameter("type"));
+        System.out.println("Page:" + page + "type: "+idTypeProduct) ;
         JsonObject jsonResponse = new JsonObject();
         jsonResponse.addProperty("success", true);
         jsonResponse.addProperty("message", "Thành công");
