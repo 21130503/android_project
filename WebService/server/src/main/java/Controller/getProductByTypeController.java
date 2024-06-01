@@ -30,4 +30,21 @@ public class getProductByTypeController extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(gson.toJson(jsonResponse));
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ProductDAO productDAO = new ProductDAO();
+        Gson gson = new Gson();
+        int page  = Integer.parseInt(req.getParameter("page"));
+        int idTypeProduct =  Integer.parseInt(req.getParameter("type"));
+        System.out.println("Page:" + page + "type: "+idTypeProduct) ;
+        JsonObject jsonResponse = new JsonObject();
+        jsonResponse.addProperty("success", true);
+        jsonResponse.addProperty("message", "Thành công");
+        JsonArray productByType = gson.toJsonTree(productDAO.getProductByType(page, idTypeProduct)).getAsJsonArray();
+        jsonResponse.add("results", productByType);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(gson.toJson(jsonResponse));
+    }
 }
