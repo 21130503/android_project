@@ -1,6 +1,7 @@
 package com.example.appbanhang.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ int page = 1;
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_phone);
         type = getIntent().getIntExtra("type", 1);
+        System.out.println("Hello");
         apiBanHang = RetrofitClient.getInstance(Utils.BASR_URL).create(APIBanHang.class);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -85,11 +87,14 @@ int page = 1;
                             }
                         },
                         throwable -> {
+                            // Log the error message
+                            Log.e("API_ERROR", "Error connecting to server", throwable);
                             Toast.makeText(getApplicationContext(), "Không kết nối được với server: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
                         }
                 )
         );
     }
+
 
     public void Mapping(){
         toolbar = findViewById(R.id.toolbar);

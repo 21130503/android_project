@@ -18,10 +18,14 @@ public interface APIBanHang {
     Observable<TypeProductModel> getTypeProduct();
     @GET("newProduct")
     Observable<NewProductModel> getNewProducts();
-    @GET("productByType")
+    @GET("getProductByType")
     Observable<ProductModel> getProducts(
             @Query("page") int page,
             @Query("type") int type
     );
+//    Observable<ProductModel> getProducts(
+//            @Field("page") int page,
+//            @Field("type") int type
+//    );
 
 }
