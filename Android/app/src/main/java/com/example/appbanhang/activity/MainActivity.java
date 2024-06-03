@@ -33,6 +33,7 @@ import com.example.appbanhang.adapter.NewProductAdapter;
 import com.example.appbanhang.adapter.TypeProductAdapter;
 import com.example.appbanhang.model.NewProduct;
 import com.example.appbanhang.model.NewProductModel;
+import com.example.appbanhang.model.Product;
 import com.example.appbanhang.model.TypeProduct;
 import com.example.appbanhang.retrofit.APIBanHang;
 import com.example.appbanhang.retrofit.RetrofitClient;
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     TypeProductAdapter typeProductAdapter;
     List<TypeProduct> typeProducts;
-    List<NewProduct> listNewProduct;
+    List<Product> listNewProduct;
     NewProductAdapter newProductAdapter;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     APIBanHang apiBanHang;
@@ -101,7 +102,9 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(home);
                         break;
                     case 1:
-                        Intent laptop = new Intent(getApplicationContext(), LaptopActivity.class);
+                        Intent laptop = new Intent(getApplicationContext(), PhoneActivity.class);
+                        laptop.putExtra("type",2);
+
                         startActivity(laptop);
                         break;
                     case 2:

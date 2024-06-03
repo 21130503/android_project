@@ -1,6 +1,7 @@
 package com.example.appbanhang.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.appbanhang.Interface.ItemClickListener;
 import com.example.appbanhang.R;
+import com.example.appbanhang.activity.DetailActivity;
 import com.example.appbanhang.model.Product;
 
 import java.text.DecimalFormat;
@@ -51,6 +54,17 @@ public class PhoneAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             myViewHolder.price.setText("Giá "+ decimalFormat.format(product.getPrice())+ "VNĐ");
             myViewHolder.description.setText(product.getDescription());
             Glide.with(context).load(product.getImage()).into(myViewHolder.image);
+            myViewHolder.setItemClickListener(new ItemClickListener() {
+                @Override
+                public void onClick(View view, int pos, boolean isLongClick) {
+                    if(!isLongClick ){
+                        Intent intent = new Intent(context, DetailActivity.class);
+                        intent.putExtra("detail", product);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    }
+                }
+            });
         }
         else{
             LoadingViewHoler loadingViewHoler = (LoadingViewHoler) holder;
@@ -68,15 +82,26 @@ public class PhoneAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return listProduct.size();
     }
 
-    public class MyViewHolder  extends RecyclerView.ViewHolder{
-        TextView name, price,description;
+    public class MyViewHolder  extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView name, price,description ,idProduct;
         ImageView image;
+        private ItemClickListener itemClickListener;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             price = itemView.findViewById(R.id.item_phone_price);
             name = itemView.findViewById(R.id.item_phone_name);
             image = itemView.findViewById(R.id.item_phone_image);
             description = itemView.findViewById(R.id.item_phone_description);
+            idProduct = itemView.findViewById(R.id.item_phone_id);
+            itemView.setOnClickListener(this);
+        }
+        public void setItemClickListener(ItemClickListener itemClickListener){
+            this.itemClickListener = itemClickListener;
+        }
+
+        @Override
+        public void onClick(View v) {
+            itemClickListener.onClick(v, getAdapterPosition(), false);
         }
     }
     public class LoadingViewHoler extends  RecyclerView.ViewHolder{

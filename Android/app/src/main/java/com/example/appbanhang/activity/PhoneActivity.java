@@ -52,7 +52,7 @@ int page = 1;
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_phone);
-        type = getIntent().getIntExtra("type", 1);
+        type = getIntent().getIntExtra("type",2);
         System.out.println("Hello");
         apiBanHang = RetrofitClient.getInstance(Utils.BASR_URL).create(APIBanHang.class);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
