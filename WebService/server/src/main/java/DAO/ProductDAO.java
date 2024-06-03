@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ProductDAO {
-    int recordSize = 6;
+    int recordSize = 5;
     public ArrayList<Product> getAllNewProduct(){
         Connection connection = null;
         ArrayList<Product> list = new ArrayList<>();

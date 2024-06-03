@@ -1,11 +1,13 @@
 package com.example.appbanhang.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
@@ -39,6 +41,9 @@ APIBanHang apiBanHang;
 List<Product> listProduct;
 ProductModel productModel;
 PhoneAdapter phoneAdapter;
+LinearLayoutManager linearLayoutManager;
+Handler handler = new Handler();
+boolean isLoading = false;
 
 int type ;
 int page = 1;
@@ -47,7 +52,7 @@ int page = 1;
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_phone);
-        type = getIntent().getIntExtra("type", 1);
+        type = getIntent().getIntExtra("type",2);
         System.out.println("Hello");
         apiBanHang = RetrofitClient.getInstance(Utils.BASR_URL).create(APIBanHang.class);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -57,9 +62,50 @@ int page = 1;
         });
         Mapping();
         ActionToolBar();
-        getProduct();
+        getProduct(page);
+        addEventLoading();
     }
 
+    private void addEventLoading() {
+        recyclerViewPhone.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(isLoading == false){
+                    if(linearLayoutManager.findLastCompletelyVisibleItemPosition()==listProduct.size()-1){
+                        isLoading = true;
+                        loadMore();
+                    }
+                }
+            }
+        });
+    }
+
+    private void loadMore() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                listProduct.add(null);
+                phoneAdapter.notifyItemInserted(listProduct.size() - 1);
+            }
+        });
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                listProduct.remove(listProduct.size()-1);
+                phoneAdapter.notifyItemRemoved(listProduct.size());
+                page  = page +1;
+                getProduct(page);
+                phoneAdapter.notifyDataSetChanged();
+                isLoading = false;
+            }
+        },2000);
+    }
     private void ActionToolBar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -71,17 +117,28 @@ int page = 1;
         });
     }
 
-    public void getProduct() {
+    public void getProduct(int page) {
         compositeDisposable.add(apiBanHang.getProducts(page, type)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         productModel -> {
                             if (productModel.isSuccess()) {
-                                listProduct = productModel.getResults();
-                                System.out.println("Hello world");
-                                phoneAdapter = new PhoneAdapter(getApplicationContext(), listProduct);
-                                recyclerViewPhone.setAdapter(phoneAdapter);
+                                if (phoneAdapter == null){
+                                    listProduct = productModel.getResults();
+                                    System.out.println("Hello world");
+                                    phoneAdapter = new PhoneAdapter(getApplicationContext(), listProduct);
+                                    recyclerViewPhone.setAdapter(phoneAdapter);
+                                }
+                                else{
+                                    int location = listProduct.size()-1;
+                                    int add_count = productModel.getResults().size();
+                                    for(int i = 0 ; i < add_count; i++){
+                                        listProduct.add(productModel.getResults().get(i));
+                                    }
+                                    phoneAdapter.notifyItemRangeInserted(location, add_count);
+                                }
+
                             } else {
                                 Toast.makeText(getApplicationContext(), "Không có dữ liệu", Toast.LENGTH_LONG).show();
                             }
@@ -99,9 +156,10 @@ int page = 1;
     public void Mapping(){
         toolbar = findViewById(R.id.toolbar);
         recyclerViewPhone = findViewById(R.id.recyclerview_phone);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         listProduct = new ArrayList<>();
-        recyclerViewPhone.setLayoutManager(layoutManager);
+        linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        recyclerViewPhone.setLayoutManager(linearLayoutManager);
         recyclerViewPhone.setHasFixedSize(true);
     }
 }
