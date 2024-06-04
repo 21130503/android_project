@@ -66,4 +66,9 @@ dependencies {
 // Optional - Use LiveData with Kotlin Coroutines
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
 
+//    Notification
+    implementation ("com.nex3z:notification-badge:1.0.4")
+//    Green ROBOT
+    implementation("org.greenrobot:eventbus:3.3.1")
+
 }

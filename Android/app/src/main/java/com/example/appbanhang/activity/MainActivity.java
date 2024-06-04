@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -40,6 +41,7 @@ import com.example.appbanhang.retrofit.RetrofitClient;
 import com.example.appbanhang.retrofit.TypeProductModel;
 import com.example.appbanhang.utils.Utils;
 import com.google.android.material.navigation.NavigationView;
+import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     NewProductAdapter newProductAdapter;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     APIBanHang apiBanHang;
+    NotificationBadge bage;
+    FrameLayout frameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,13 +169,42 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.navigationview);
         listViewManHinhChinh = findViewById(R.id.listviewmanhinhchinh);
         drawerLayout = findViewById((R.id.drawerlayout));
+        bage = findViewById(R.id.menu_count);
+        frameLayout = findViewById(R.id.frameCart_main);
 //        Khởi tạo list
         typeProducts = new ArrayList<>();
 //        Khoi tạo list
         listNewProduct = new ArrayList<>();
+//        cart
+        if(Utils.carts == null){
+            Utils.carts =new ArrayList<>();
+        }else{
+            int totalItem = 0;
+            for (int i=0; i< Utils.carts.size();i++){
+                totalItem = totalItem + Utils.carts.get(i).getCount();
+            }
+            bage.setText(String.valueOf(totalItem));
+        }
 
-
+        frameLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int totalItem = 0;
+        for (int i=0; i< Utils.carts.size();i++){
+            totalItem = totalItem + Utils.carts.get(i).getCount();
+        }
+        bage.setText(String.valueOf(totalItem));
+    }
+
     // Check connect internet
     public boolean isConnected(Context context){
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
