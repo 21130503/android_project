@@ -1,16 +1,33 @@
 package com.example.appbanhang.activity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appbanhang.R;
+import com.example.appbanhang.adapter.CartAdapter;
+import com.example.appbanhang.model.Cart;
+import com.example.appbanhang.utils.Utils;
+
+import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
+    TextView titleCartEmpty , totalPrice;
+    Toolbar toolbarCart;
+    RecyclerView recyclerView;
+    Button buyBtn, incrementBtn, decrementBtn;
+    CartAdapter cartAdapter;
+    List<Cart> cartList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +38,39 @@ public class CartActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+
         });
+        Mapping();
+        initControl();
+    }
+
+    private void initControl() {
+        setSupportActionBar(toolbarCart);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbarCart.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        if(Utils.carts.size() ==0 ){
+            titleCartEmpty.setVisibility(View.VISIBLE);
+        }else{
+            cartAdapter = new CartAdapter(getApplicationContext(), Utils.carts);
+            recyclerView.setAdapter(cartAdapter);
+        }
+    }
+
+    private void Mapping() {
+        titleCartEmpty = findViewById(R.id.cart_title_empty);
+        toolbarCart = findViewById(R.id.toolbar_cart);
+        recyclerView = findViewById(R.id.recycleviewCart);
+        totalPrice = findViewById(R.id.total_price);
+        buyBtn = findViewById(R.id.btn_buy);
+//        incrementBtn = findViewById(R.id.item_cart_increment);
+//        decrementBtn = findViewById(R.id.item_cart_decrement);
     }
 }

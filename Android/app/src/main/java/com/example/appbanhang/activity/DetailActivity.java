@@ -1,9 +1,11 @@
 package com.example.appbanhang.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,6 +34,7 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar;
         Product product;
         NotificationBadge bage;
+        FrameLayout frameLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +95,11 @@ public class DetailActivity extends AppCompatActivity {
             cart.setPriceProduct(price);
             Utils.carts.add(cart);
         }
-        bage.setText(String.valueOf(Utils.carts.size()));
+        int totalItem = 0;
+        for (int i=0; i< Utils.carts.size();i++){
+            totalItem = totalItem + Utils.carts.get(i).getCount();
+        }
+        bage.setText(String.valueOf(totalItem));
     }
 
     private void initData() {
@@ -127,8 +134,20 @@ public class DetailActivity extends AppCompatActivity {
         image = findViewById(R.id.detail_img);
         toolbar = findViewById(R.id.toolbar_detail);
         bage = findViewById(R.id.menu_count);
+        frameLayout = findViewById(R.id.frameCart);
+        frameLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cart = new Intent(getApplicationContext(), CartActivity.class);
+                startActivity(cart);
+            }
+        });
         if(Utils.carts != null) {
-            bage.setText(String.valueOf(Utils.carts.size()));
+            int totalItem = 0;
+            for (int i=0; i< Utils.carts.size();i++){
+                totalItem = totalItem + Utils.carts.get(i).getCount();
+            }
+            bage.setText(String.valueOf(totalItem));
         }
     }
 }
