@@ -169,6 +169,10 @@ public class MainActivity extends AppCompatActivity {
         typeProducts = new ArrayList<>();
 //        Khoi tạo list
         listNewProduct = new ArrayList<>();
+//        cart
+        if(Utils.carts == null){
+            Utils.carts =new ArrayList<>();
+        }
 
 
     }
