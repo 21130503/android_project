@@ -151,4 +151,16 @@ public class DetailActivity extends AppCompatActivity {
             bage.setText(String.valueOf(totalItem));
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(Utils.carts != null) {
+            int totalItem = 0;
+            for (int i=0; i< Utils.carts.size();i++){
+                totalItem = totalItem + Utils.carts.get(i).getCount();
+            }
+            bage.setText(String.valueOf(totalItem));
+        }
+    }
 }

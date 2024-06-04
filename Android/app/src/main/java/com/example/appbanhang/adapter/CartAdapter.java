@@ -1,6 +1,8 @@
 package com.example.appbanhang.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +56,32 @@ public class CartAdapter  extends RecyclerView.Adapter<CartAdapter.MyViewHolder>
                     if(carts.get(pos).getCount() > 1){
                         int new_quantity = carts.get(pos).getCount() -1;
                         carts.get(pos).setCount(new_quantity);
+                        holder.item_cart_quantity.setText(String.valueOf(carts.get(pos).getCount()));
+                        long price = carts.get(pos).getCount() * carts.get(pos).getPriceProduct();
+                        holder.item_cart_price_2.setText(decimalFormat.format(price) +"VNĐ");
+                        EventBus.getDefault().postSticky(new CalcTotalEvent());
+                    }
+                    else  if(carts.get(pos).getCount() == 1) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getRootView().getContext());
+                        builder.setTitle("Thông báo");
+                        builder.setMessage("Bạn có muốn xóa sản phẩm này ra khỏi giỏ hàng không ?");
+                        builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                carts.remove(pos);
+                                notifyDataSetChanged();
+                                EventBus.getDefault().postSticky(new CalcTotalEvent());
+
+                            }
+                        });
+                        builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.show();
+
                     }
                 }
                 else if(value==2){
@@ -61,11 +89,11 @@ public class CartAdapter  extends RecyclerView.Adapter<CartAdapter.MyViewHolder>
                         int new_quantity = carts.get(pos).getCount() +1;
                         carts.get(pos).setCount(new_quantity);
                     }
+                    holder.item_cart_quantity.setText(String.valueOf(carts.get(pos).getCount()));
+                    long price = carts.get(pos).getCount() * carts.get(pos).getPriceProduct();
+                    holder.item_cart_price_2.setText(decimalFormat.format(price) +"VNĐ");
+                    EventBus.getDefault().postSticky(new CalcTotalEvent());
                 }
-                holder.item_cart_quantity.setText(String.valueOf(carts.get(pos).getCount()));
-                long price = carts.get(pos).getCount() * carts.get(pos).getPriceProduct();
-                holder.item_cart_price_2.setText(decimalFormat.format(price) +"VNĐ");
-                EventBus.getDefault().postSticky(new CalcTotalEvent());
             }
         });
     }
