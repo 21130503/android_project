@@ -17,8 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.appbanhang.R;
 import com.example.appbanhang.adapter.CartAdapter;
 import com.example.appbanhang.model.Cart;
+import com.example.appbanhang.model.EventBus.CalcTotalEvent;
 import com.example.appbanhang.utils.Utils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
@@ -42,6 +48,17 @@ public class CartActivity extends AppCompatActivity {
         });
         Mapping();
         initControl();
+        caluclateTotalPrice();
+    }
+
+    private void caluclateTotalPrice() {
+        long tottalPrice_calc = 0;
+
+        for(int i = 0; i<Utils.carts.size() ; i++){
+            tottalPrice_calc = tottalPrice_calc + Utils.carts.get(i).getCount()* Utils.carts.get(i).getPriceProduct();
+        }
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        totalPrice.setText(decimalFormat.format(tottalPrice_calc));
     }
 
     private void initControl() {
@@ -72,5 +89,24 @@ public class CartActivity extends AppCompatActivity {
         buyBtn = findViewById(R.id.btn_buy);
 //        incrementBtn = findViewById(R.id.item_cart_increment);
 //        decrementBtn = findViewById(R.id.item_cart_decrement);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+
+    }
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void  eventCalcPrice(CalcTotalEvent event){
+        if(event != null){
+            caluclateTotalPrice();
+        }
     }
 }

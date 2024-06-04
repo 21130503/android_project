@@ -100,6 +100,7 @@ public class DetailActivity extends AppCompatActivity {
             totalItem = totalItem + Utils.carts.get(i).getCount();
         }
         bage.setText(String.valueOf(totalItem));
+
     }
 
     private void initData() {

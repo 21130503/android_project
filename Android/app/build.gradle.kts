@@ -68,5 +68,7 @@ dependencies {
 
 //    Notification
     implementation ("com.nex3z:notification-badge:1.0.4")
+//    Green ROBOT
+    implementation("org.greenrobot:eventbus:3.3.1")
 
 }
