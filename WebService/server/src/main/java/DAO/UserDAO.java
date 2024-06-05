@@ -28,7 +28,7 @@ public class UserDAO {
                 user.setEmail(resultSet.getString("email"));
                 user.setName(resultSet.getString("name"));
                 user.setAdmin(resultSet.getBoolean("isAdmin"));
-                user.setCreatedAt(resultSet.getDate("createdAt"));
+//                user.setCreatedAt(resultSet.getDate("createdAt"));
                 listUser.add(user);
             }
         } catch (Exception e) {
@@ -60,18 +60,20 @@ public class UserDAO {
         return checkEmail;
     }
 
-    public boolean register(String email, String password) {
+    public boolean register(String email, String password,String phoneNumber, String username) {
         Connection connection = null;
         if (checkEmailExist(email)) {
             return false;
         } else {
             try {
                 connection = Connect.getConnection();
-                String insert = "Insert into user( email, password, createdAt) values (?,?,?)";
+                String insert = "Insert into user( email, password,phoneNumber, username, createdAt) values (?,?,?,?,?)";
                 PreparedStatement preparedStatement = connection.prepareStatement(insert);
                 preparedStatement.setString(1, email);
                 preparedStatement.setString(2, password);
-                preparedStatement.setDate(3, sqlDate);
+                preparedStatement.setString(3, phoneNumber);
+                preparedStatement.setString(4, username);
+                preparedStatement.setDate(5, sqlDate);
                 int check = preparedStatement.executeUpdate();
                 if (check >= 0) {
                     return true;
@@ -89,16 +91,18 @@ public class UserDAO {
         try{
             connection = Connect
                     .getConnection();
-            String sql = "select id, email, isAdmin from user where email = ? AND password = ?";
+            String sql = "select id, email, isAdmin, phoneNumber , username from user where email = ? AND password = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);
             preparedStatement.setString(2,password);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 User user = new User();
-                user.setId(resultSet.getInt(1));
-                user.setEmail(resultSet.getString(2));
-                user.setAdmin(resultSet.getBoolean(3));
+                user.setId(resultSet.getInt("id"));
+                user.setEmail(resultSet.getString("email"));
+                user.setName(resultSet.getString("phoneNumber"));
+                user.setPhoneNumber(resultSet.getString("phoneNumber"));
+                user.setAdmin(resultSet.getBoolean("isAdmin"));
                 return user;
             }
         }catch (SQLException e){
