@@ -73,7 +73,7 @@ public class CartActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        if(Utils.carts.size() ==0 ){
+        if( Utils.carts == null || Utils.carts.size() ==0 ){
             titleCartEmpty.setVisibility(View.VISIBLE);
         }else{
             cartAdapter = new CartAdapter(getApplicationContext(), Utils.carts);

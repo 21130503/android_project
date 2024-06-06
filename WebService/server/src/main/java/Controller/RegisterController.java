@@ -1,7 +1,9 @@
 package Controller;
 
 import DAO.UserDAO;
+import Model.User;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import javax.servlet.ServletException;
@@ -10,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(value = "/register")
 public class RegisterController extends HttpServlet {
@@ -22,19 +26,37 @@ public class RegisterController extends HttpServlet {
         Gson gson = new Gson();
         JsonObject jsonResponse = new JsonObject();
         UserDAO userDAO = new UserDAO();
-        System.out.println(email);
+        System.out.println(email); // For debugging purposes
+
         String status;
         String mess;
-        if(userDAO.register(email,password, phoneNumber,username)){
-           status = "Success";
-           mess = "Thành công";
-        }
-        else{
+        List<User> result = new ArrayList<>();
+
+        try {
+            if (userDAO.register(email, password, phoneNumber, username)) {
+                status = "Success";
+                mess = "Thành công";
+                User user = userDAO.login(email, password);
+                if (user != null) {
+                    result.add(user);
+                }
+            } else {
+                status = "Error";
+                mess = "Đã có lỗi xảy ra";
+            }
+        } catch (Exception e) {
             status = "Error";
-            mess = "Đã có lỗi xảy ra";
+            mess = "Đã có lỗi xảy ra: " + e.getMessage();
+            e.printStackTrace(); // Log the error for debugging
         }
+
         jsonResponse.addProperty("status", status);
         jsonResponse.addProperty("message", mess);
+
+        // Serialize the result list to JSON array
+        JsonArray jsonResultArray = gson.toJsonTree(result).getAsJsonArray();
+        jsonResponse.add("result", jsonResultArray);
+
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(gson.toJson(jsonResponse));
