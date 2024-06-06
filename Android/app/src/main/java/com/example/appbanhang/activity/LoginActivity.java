@@ -20,6 +20,7 @@ import com.example.appbanhang.retrofit.APIBanHang;
 import com.example.appbanhang.retrofit.RetrofitClient;
 import com.example.appbanhang.utils.Utils;
 
+import io.paperdb.Paper;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -70,6 +71,10 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
         }
         else{
+//            Paper
+            Paper.book().write("email", emailString);
+            Paper.book().write("password", passwordString);
+
             compositeDisposable.add(apiBanHang.login(emailString, passwordString)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -97,11 +102,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void Mapping(){
+        Paper.init(this);
         apiBanHang = RetrofitClient.getInstance(Utils.BASR_URL).create(APIBanHang.class);
         registertxt = findViewById(R.id.register);
         btnLogin = findViewById(R.id.btn_login);
         email = findViewById(R.id.email_login);
         password = findViewById(R.id.password_login);
+
+//        Paper
+        if(Paper.book().read("email") !=null && Paper.book().read("password") !=null){
+            email.setText(Paper.book().read("email"));
+            password.setText(Paper.book().read("password"));
+        }
     }
 
     @Override
