@@ -28,29 +28,29 @@ public class RegisterController extends HttpServlet {
         UserDAO userDAO = new UserDAO();
         System.out.println(email); // For debugging purposes
 
-        String status;
+        boolean status;
         String mess;
         List<User> result = new ArrayList<>();
 
         try {
             if (userDAO.register(email, password, phoneNumber, username)) {
-                status = "Success";
+                status = true;
                 mess = "Thành công";
                 User user = userDAO.login(email, password);
                 if (user != null) {
                     result.add(user);
                 }
             } else {
-                status = "Error";
+                status = false;
                 mess = "Đã có lỗi xảy ra";
             }
         } catch (Exception e) {
-            status = "Error";
+            status = false;
             mess = "Đã có lỗi xảy ra: " + e.getMessage();
             e.printStackTrace(); // Log the error for debugging
         }
 
-        jsonResponse.addProperty("status", status);
+        jsonResponse.addProperty("success", status);
         jsonResponse.addProperty("message", mess);
 
         // Serialize the result list to JSON array

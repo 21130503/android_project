@@ -35,5 +35,11 @@ public interface APIBanHang {
             @Field("password") String password,
             @Field("phoneNumber") String phoneNumber
     );
+    @POST("login")
+    @FormUrlEncoded
+    Observable<UserModel> login(
+            @Field("email") String email,
+            @Field("password") String password
+    );
 
 }

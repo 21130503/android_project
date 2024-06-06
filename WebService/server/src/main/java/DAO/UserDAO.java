@@ -110,4 +110,24 @@ public class UserDAO {
         }
         return  null;
     }
+
+    public boolean loginBoolean(String email, String password) {
+        Connection connection = null;
+        try{
+            connection = Connect
+                    .getConnection();
+            String sql = "select id, email, isAdmin, phoneNumber , username from user where email = ? AND password = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2,password);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+
+                return true;
+            }
+        }catch (SQLException e){
+            throw  new RuntimeException(e);
+        }
+        return  false;
+    }
 }

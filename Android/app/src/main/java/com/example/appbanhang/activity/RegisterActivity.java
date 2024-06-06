@@ -80,9 +80,12 @@ public class RegisterActivity extends AppCompatActivity {
                             userModel -> {
                                 System.out.println(userModel);
                                 if(userModel.isSuccess()){
+                                    Utils.currentUser.setEmail(emailStr);
+//                                    Utils.currentUser.set
                                     Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                                     startActivity(intent);
+                                    finish();
                                 } else {
                                     Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
