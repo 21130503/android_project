@@ -83,16 +83,16 @@ public class CheckoutActivity extends AppCompatActivity {
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
-                                    userModel-> {
-//                                        if(userModel.isSuccess()){
-//                                            Utils.currentUser = userModel.getResult().get(0);
-//                                            Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
-//                                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                                            startActivity(intent);
-//                                            finish();
-//                                        } else {
-//                                            Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
-//                                        }
+                                    orderModel-> {
+                                        if(orderModel.isSuccess()){
+//                                            Utils.currentUser = orderModel.getResult().get(0);
+                                            Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), orderModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
                                     },
                                     throwable -> {
                                         // Log the error and show a Toast message
