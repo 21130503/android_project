@@ -7,6 +7,7 @@ public class Product {
     private  int price;
     private String description;
     private  int type;
+    private  int count;
 
     public Product() {
     }
@@ -53,6 +54,14 @@ public class Product {
 
     public int getType() {
         return type;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     public void setType(int type) {
