@@ -1,6 +1,9 @@
 package Controller;
 
 import DAO.OrderDAO;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +22,24 @@ public class CreateOrderController extends HttpServlet {
         String cart = req.getParameter("carts");
         OrderDAO orderDAO = new OrderDAO();
         System.out.println("start");
-        orderDAO.createOrder(idUser,address, totalPrice, cart);
-        System.out.println("end");
+        JsonObject jsonResponse = new JsonObject();
+        Gson gson = new Gson();
+        String message = null;
+        boolean success = false;
+        if(orderDAO.createOrder(idUser,address, totalPrice, cart)){
+            success = true;
+            message = "Thành công";
+
+        }
+        else{
+            success = false;
+            message = "Thất bại";
+        }
+
+        jsonResponse.addProperty("success", success);
+        jsonResponse.addProperty("message", message);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(gson.toJson(jsonResponse));
     }
 }
