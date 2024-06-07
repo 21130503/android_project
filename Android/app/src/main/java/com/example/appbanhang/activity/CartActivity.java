@@ -1,5 +1,6 @@
 package com.example.appbanhang.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +35,7 @@ public class CartActivity extends AppCompatActivity {
     Button buyBtn, incrementBtn, decrementBtn;
     CartAdapter cartAdapter;
     List<Cart> cartList;
+    long tottalPrice_calc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class CartActivity extends AppCompatActivity {
     }
 
     private void caluclateTotalPrice() {
-        long tottalPrice_calc = 0;
+        tottalPrice_calc  = 0;
 
         for(int i = 0; i<Utils.carts.size() ; i++){
             tottalPrice_calc = tottalPrice_calc + Utils.carts.get(i).getCount()* Utils.carts.get(i).getPriceProduct();
@@ -79,6 +81,14 @@ public class CartActivity extends AppCompatActivity {
             cartAdapter = new CartAdapter(getApplicationContext(), Utils.carts);
             recyclerView.setAdapter(cartAdapter);
         }
+        buyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CheckoutActivity.class);
+                intent.putExtra("totalPrice", tottalPrice_calc);
+                startActivity(intent);
+            }
+        });
     }
 
     private void Mapping() {
