@@ -130,4 +130,27 @@ public class UserDAO {
         }
         return  false;
     }
+    public User getUserById(String id) {
+        Connection connection = null;
+        try{
+            connection = Connect
+                    .getConnection();
+            String sql = "select id, email, isAdmin, phoneNumber , username from user where id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setEmail(resultSet.getString("email"));
+                user.setName(resultSet.getString("phoneNumber"));
+                user.setPhoneNumber(resultSet.getString("phoneNumber"));
+                user.setAdmin(resultSet.getBoolean("isAdmin"));
+                return user;
+            }
+        }catch (SQLException e){
+            throw  new RuntimeException(e);
+        }
+        return  null;
+    }
 }

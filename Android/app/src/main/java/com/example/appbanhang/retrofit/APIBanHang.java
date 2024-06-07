@@ -41,5 +41,13 @@ public interface APIBanHang {
             @Field("email") String email,
             @Field("password") String password
     );
+    @POST("create-order")
+    @FormUrlEncoded
+    Observable<UserModel> createOder(
+            @Field("idUser") int idUser,
+            @Field("totalPrice") String totalPrice,
+            @Field("address") String address,
+            @Field("carts") String cart
+    );
 
 }
