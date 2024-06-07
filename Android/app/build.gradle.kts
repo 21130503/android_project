@@ -71,4 +71,7 @@ dependencies {
 //    Green ROBOT
     implementation("org.greenrobot:eventbus:3.3.1")
 
+    //Paper- Lưu thông tin người dùng khi thoát app
+    implementation ("io.github.pilgr:paperdb:2.7.2")
+
 }

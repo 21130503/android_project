@@ -1,4 +1,4 @@
-package Model;
+package com.example.appbanhang.model;
 
 import java.util.Date;
 
@@ -53,15 +53,5 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", isAdmin=" + isAdmin +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                '}';
-    }
 
 }
