@@ -2,14 +2,9 @@ package com.example.appbanhang.retrofit;
 
 import com.example.appbanhang.model.NewProductModel;
 import com.example.appbanhang.model.ProductModel;
-import com.example.appbanhang.model.TypeProduct;
 import com.example.appbanhang.model.UserModel;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reactivex.rxjava3.core.Observable;
-import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -49,5 +44,19 @@ public interface APIBanHang {
             @Field("address") String address,
             @Field("carts") String cart
     );
-
+    @POST("forgetPassword")
+    @FormUrlEncoded
+    Observable<UserModel> resetPass(
+            @Field("email") String email
+    );
+    @POST("validationOTP")
+    @FormUrlEncoded
+    Observable<UserModel> validationOTP(
+            @Field("otp") String otp
+    );
+    @POST("newPassword")
+    @FormUrlEncoded
+    Observable<UserModel> newPassword(
+            @Field("password") String password
+    );
 }

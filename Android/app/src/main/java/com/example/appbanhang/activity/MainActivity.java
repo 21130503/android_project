@@ -117,6 +117,10 @@ public class MainActivity extends AppCompatActivity {
 
                         startActivity(phone);
                         break;
+                    case 3:
+                        Intent logout = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(logout);
+                        break;
                 }
             }
         });
