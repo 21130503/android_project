@@ -2,6 +2,7 @@ package Model;
 
 public class Product {
     private  int id;
+    private int idProduct;
     private String name;
     private String image;
     private  int price;
@@ -66,6 +67,14 @@ public class Product {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getIdProduct() {
+        return idProduct;
+    }
+
+    public void setIdProduct(int idProduct) {
+        this.idProduct = idProduct;
     }
 
     @Override
