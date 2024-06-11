@@ -50,5 +50,9 @@ public interface APIBanHang {
             @Field("address") String address,
             @Field("carts") String cart
     );
+    @GET("get-order")
+    Observable<OrderModel> getViewOrder(
+            @Query("idUser") int idUser
+    );
 
 }

@@ -61,5 +61,29 @@ public class ProductDAO {
         }
         return list;
     }
+    public Product getProductById(int id) {
+        Connection connection = null;
+        Product product = new Product();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select id, price,image,description, name, type from product where id=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                product.setId(resultSet.getInt("id"));
+                product.setPrice(resultSet.getInt("price"));
+                product.setType(resultSet.getInt("type"));
+                product.setName(resultSet.getString("name"));
+                product.setDescription(resultSet.getString("description"));
+                product.setImage(resultSet.getString("image"));
+            }
 
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+//        System.out.println(product.toString());
+        return  product;
+    }
 }

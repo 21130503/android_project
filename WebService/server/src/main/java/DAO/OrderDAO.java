@@ -15,6 +15,7 @@ public class OrderDAO {
     Gson gson = new Gson();
     int idOrder = 0;
     UserDAO userDAO = new UserDAO();
+    ProductDAO productDAO = new ProductDAO();
     public boolean createOrder(String idUser, String address, String totalPrice, String cart){
             this.mainOrder(idUser,address, totalPrice);
 
@@ -122,9 +123,7 @@ public int mainOrder(String idUser, String address, String totalPrice) {
                     checkBool =false;
                     return  checkBool;
                 }
-                else{
-                    preparedStatement.addBatch();
-                }
+
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -139,28 +138,18 @@ public int mainOrder(String idUser, String address, String totalPrice) {
         List<Product> products = new ArrayList<>();
         try{
             connection = Connect.getConnection();
-            String sql = "SELECT idOrder,address,phoneNumber, totalPrice, status,product.id as idProduct  ,name,image,type, price, quantity,description FROM orderproduct AS op JOIN ct_order AS ct ON op.id = ct.idOrder join product as product on ct.idProduct = product.id WHERE op.idUser = ?";
+            String sql = "SELECT id,address,phoneNumber, totalPrice, status FROM orderproduct where idUser = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt( 1,Integer.parseInt(idUser));
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
                 Order order = new Order();
-                order.setId(resultSet.getInt("idOrder"));
+                order.setId(resultSet.getInt("id"));
                 order.setStatus(resultSet.getString("status"));
                 order.setAddress(resultSet.getString("address"));
                 order.setPhoneNumber(resultSet.getString("phoneNumber"));
                 order.setTotal(resultSet.getString("totalPrice"));
-                Product product = new Product();
-                CT_Order ctOrder = new CT_Order();
-                product.setName(resultSet.getString("name"));
-                product.setDescription(resultSet.getString("description"));
-                product.setCount(resultSet.getInt("quantity"));
-                product.setPrice(resultSet.getInt("price"));
-                product.setImage(resultSet.getString("image"));
-                product.setType(resultSet.getInt("type"));
-                product.setId(resultSet.getInt("idProduct"));
-                products.add(product);
-                order.setProducts(products);
+                order.setProducts(this.getCt_Order(resultSet.getInt("id")).getProductList());
                 orders.add(order);
             }
             return  orders;
@@ -168,5 +157,28 @@ public int mainOrder(String idUser, String address, String totalPrice) {
         catch (SQLException e) {
             throw  new RuntimeException(e);
         }
+    }
+    public CT_Order getCt_Order(int idOrder) {
+        Connection connection = null;
+        CT_Order ctOrder = new CT_Order();
+        List<Product> products = new ArrayList<>();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select id, idOrder,idProduct, quantity from ct_order where idOrder = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1,idOrder);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                Product product = productDAO.getProductById(resultSet.getInt("idProduct"));
+                product.setCount(resultSet.getInt("quantity"));
+                products.add(product);
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        ctOrder.setProductList(products);
+        return  ctOrder;
+
     }
 }
