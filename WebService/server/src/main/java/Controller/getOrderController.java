@@ -17,6 +17,7 @@ public class getOrderController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String idUser = req.getParameter("idUser");
+        System.out.println(idUser);
         OrderDAO orderDAO = new OrderDAO();
         Gson gson = new Gson();
         JsonObject jsonResponse = new JsonObject();

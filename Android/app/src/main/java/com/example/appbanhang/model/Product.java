@@ -9,6 +9,7 @@ public class Product implements Serializable {
     private int price;
     private String description;
     private int type;
+    private int count;
 
 
     public int getId() {
@@ -57,5 +58,13 @@ public class Product implements Serializable {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }
