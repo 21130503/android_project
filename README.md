@@ -29,11 +29,11 @@ Nhấn nút "Run".
 🤝 Thành Viên Nhóm
 Dự án này được phát triển bởi một nhóm năm người:
 
-Đặng Hữu Quý
-Nguyễn Thanh Quyền
-Nguyễn Đình Việt Anh
-Nguyễn Văn Sáng
-Trịnh Minh Quý
+Đặng Hữu Quý - 
+Nguyễn Thanh Quyền - 
+Nguyễn Đình Việt Anh - 
+Nguyễn Văn Sáng - 
+Trịnh Minh Quý - 
 📄 Giấy Phép
 Dự án này được cấp phép dưới giấy phép MIT - xem tệp LICENSE để biết thêm chi tiết.
 
