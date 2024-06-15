@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     APIBanHang apiBanHang;
     NotificationBadge bage;
     FrameLayout frameLayout;
+    ImageView imageSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById((R.id.drawerlayout));
         bage = findViewById(R.id.menu_count);
         frameLayout = findViewById(R.id.frameCart_main);
+        imageSearch = findViewById(R.id.image_search);
 //        Khởi tạo list
         typeProducts = new ArrayList<>();
 //        Khoi tạo list
@@ -193,6 +195,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+                startActivity(intent);
+            }
+        });
+        imageSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
                 startActivity(intent);
             }
         });
