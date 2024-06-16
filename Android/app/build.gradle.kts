@@ -74,4 +74,6 @@ dependencies {
     //Paper- Lưu thông tin người dùng khi thoát app
     implementation ("io.github.pilgr:paperdb:2.7.2")
 
+    implementation ("com.airbnb.android:lottie:6.4.1")
+
 }
