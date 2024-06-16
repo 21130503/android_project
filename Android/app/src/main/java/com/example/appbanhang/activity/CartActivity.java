@@ -56,8 +56,8 @@ public class CartActivity extends AppCompatActivity {
     private void caluclateTotalPrice() {
         tottalPrice_calc  = 0;
 
-        for(int i = 0; i<Utils.carts.size() ; i++){
-            tottalPrice_calc = tottalPrice_calc + Utils.carts.get(i).getCount()* Utils.carts.get(i).getPriceProduct();
+        for(int i = 0; i<Utils.purchases.size() ; i++){
+            tottalPrice_calc = tottalPrice_calc + Utils.purchases.get(i).getCount()* Utils.purchases.get(i).getPriceProduct();
         }
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         totalPrice.setText(decimalFormat.format(tottalPrice_calc));
