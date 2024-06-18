@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.example.appbanhang.Interface.IImageClickListener;
 import com.example.appbanhang.R;
 import com.example.appbanhang.model.Cart;
 import com.example.appbanhang.model.EventBus.CalcTotalEvent;
+import com.example.appbanhang.utils.Utils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -49,6 +52,28 @@ public class CartAdapter  extends RecyclerView.Adapter<CartAdapter.MyViewHolder>
         Glide.with(context).load(cart.getImgProduct()).into(holder.item_cart_image);
         long price = cart.getCount() * cart.getPriceProduct();
         holder.item_cart_price_2.setText(decimalFormat.format(price) +"VNĐ");
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    System.out.println("position :" + position);
+                    System.out.println("Cart : " + cart);
+                    Utils.purchases.add(cart);
+                    System.out.println("Mang mua hang: " + Utils.purchases.size());
+                    EventBus.getDefault().postSticky(new CalcTotalEvent());
+                }
+                else {
+                    for (int i= 0 ; i<Utils.purchases.size(); i++) {
+                        if(Utils.purchases.get(i).getIdProduct() == cart.getIdProduct()) {
+                            Utils.purchases.remove(i);
+                            EventBus.getDefault().postSticky(new CalcTotalEvent());
+                        }
+                    }
+
+                }
+            }
+        });
+
         holder.setListener(new IImageClickListener() {
             @Override
             public void onImageClick(View view, int pos, int value) {
@@ -107,6 +132,7 @@ public class CartAdapter  extends RecyclerView.Adapter<CartAdapter.MyViewHolder>
         ImageView item_cart_image, item_cart_decrement,item_cart_increment;
         TextView item_cart_name,item_cart_price,item_cart_quantity,item_cart_price_2;
         IImageClickListener listener;
+        CheckBox checkBox;
 
 
 
@@ -119,6 +145,8 @@ public class CartAdapter  extends RecyclerView.Adapter<CartAdapter.MyViewHolder>
             item_cart_price_2 = itemView.findViewById(R.id.item_cart_price_2);
             item_cart_increment = itemView.findViewById(R.id.item_cart_increment);
             item_cart_decrement = itemView.findViewById(R.id.item_cart_decrement);
+            checkBox = itemView.findViewById(R.id.item_cart_checkbox);
+//            click
             item_cart_increment.setOnClickListener(this);
             item_cart_decrement.setOnClickListener(this);
         }
