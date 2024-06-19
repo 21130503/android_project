@@ -121,6 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Paper.book().write("isLogin", isLogin);
 
                                 Utils.currentUser = userModel.getResult().get(0);
+                                Paper.book().write("user",  Utils.currentUser);
                                 Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
