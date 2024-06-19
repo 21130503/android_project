@@ -126,8 +126,9 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(phone);
                         break;
                     case 3:
-                        Intent viewOrder = new Intent(getApplicationContext(), ViewOrder.class);
-                        startActivity(viewOrder);
+                        Intent logout = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(logout);
+                        break;
                 }
             }
         });

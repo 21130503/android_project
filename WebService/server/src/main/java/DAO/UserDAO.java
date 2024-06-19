@@ -26,7 +26,7 @@ public class UserDAO {
                 User user = new User();
                 user.setId(resultSet.getInt("id"));
                 user.setEmail(resultSet.getString("email"));
-                user.setName(resultSet.getString("name"));
+                user.setName(resultSet.getString("username"));
                 user.setAdmin(resultSet.getBoolean("isAdmin"));
                 user.setCreatedAt(resultSet.getDate("createdAt"));
                 listUser.add(user);
@@ -37,6 +37,31 @@ public class UserDAO {
             Connect.closeConnection(connection);
         }
         return listUser;
+    }
+    public User getUser(String email) {
+        Connection connection = null;
+        User user = new User();
+
+        if (checkEmailExist(email)){
+            try {
+                connection = Connect.getConnection();
+                String sql = "select id, email,username, isAdmin, createdAt from user where email = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    user.setId(resultSet.getInt("id"));
+                    user.setEmail(resultSet.getString("email"));
+                    user.setName(resultSet.getString("username"));
+                    user.setAdmin(resultSet.getBoolean("isAdmin"));
+//                user.setCreatedAt(resultSet.getDate("createdAt"));
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                Connect.closeConnection(connection);
+            }
+        }
+        return user;
     }
 
     public boolean checkEmailExist(String email) {
@@ -156,5 +181,27 @@ public class UserDAO {
             Connect.closeConnection(connection);
         }
         return null;
+    }
+    public boolean updatePassword(String email, String pass){
+        Connection connection = null;
+        if (checkEmailExist(email)) {
+            return false;
+        }else {
+            try {
+                connection = Connect.getConnection();
+                String query = "UPDATE user SET `password` = ?  WHERE email = ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, pass);
+                preparedStatement.setString(2, email);
+                int check = preparedStatement.executeUpdate();
+                if (check >= 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

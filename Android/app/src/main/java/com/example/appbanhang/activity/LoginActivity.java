@@ -28,7 +28,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class LoginActivity extends AppCompatActivity {
-    TextView registertxt;
+    TextView registertxt, resetPass;
     Button btnLogin;
     EditText email, password;
         CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -62,6 +62,14 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         });
+
+        resetPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ResetPassActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void login() {
@@ -90,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_login);
         email = findViewById(R.id.email_login);
         password = findViewById(R.id.password_login);
+        resetPass = findViewById(R.id.resetPass);
 
 //        Paper
         if(Paper.book().read("email") !=null && Paper.book().read("password") !=null){
