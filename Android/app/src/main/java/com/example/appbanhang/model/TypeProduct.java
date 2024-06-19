@@ -13,6 +13,9 @@ public class TypeProduct {
         this.image = image;
     }
 
+    public TypeProduct(int i, String quảnLí, String url) {
+    }
+
     public int getId() {
         return id;
     }

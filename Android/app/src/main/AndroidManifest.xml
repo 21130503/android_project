@@ -17,12 +17,29 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.OTPActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.TypeProductActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppBanHang" />
+            android:exported="false" />
+        <activity
+            android:name=".activity.NewPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ResetPassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ManagerActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.SplashscreenActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.SearchActivity"
             android:exported="false" />
@@ -34,13 +51,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".activity.RegisterActivity"
             android:exported="false" />

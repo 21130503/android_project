@@ -51,6 +51,7 @@ import com.nex3z.notificationbadge.NotificationBadge;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.paperdb.Paper;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -85,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
         ActionBar();
         ActionViewFlipper();
 
+        Paper.init(this);
+        if (Paper.book().read("user") != null) {
+            User user = Paper.book().read("user");
+            Utils.currentUser = user;
+        }
         if (isConnected(this)) {
             Toast.makeText(getApplicationContext(), "OK", Toast.LENGTH_LONG).show();
             ActionViewFlipper();
@@ -124,8 +130,9 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(phone);
                         break;
                     case 3:
-                        Intent viewOrder = new Intent(getApplicationContext(), ViewOrder.class);
-                        startActivity(viewOrder);
+                        Intent logout = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(logout);
+                        break;
                 }
             }
         });
@@ -138,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(
                         newProductModel -> {
                             listNewProduct = newProductModel.getResults();
+
                             System.out.println(listNewProduct);
                             newProductAdapter = new NewProductAdapter(getApplicationContext(), listNewProduct);
                             recyclerViewManHinhChinh.setAdapter(newProductAdapter);
@@ -156,11 +164,19 @@ public class MainActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         typeProductModel -> {
+
                             System.out.println(typeProductModel.getResults());
                             if (typeProductModel.isSuccess()) {
-                                typeProducts = typeProductModel.getResults();
 
+                                typeProducts = typeProductModel.getResults();
+                                if (Utils.currentUser.isAdmin()) {
+                                    typeProducts.add(new TypeProduct(200, "Quản lí", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
+                                }
+//                                typeProducts.add()
+                                System.out.println(typeProducts.size());
+                                System.out.println(typeProducts);
                                 typeProductAdapter = new TypeProductAdapter(typeProducts, getApplicationContext());
+                                typeProductAdapter.notifyDataSetChanged();
                                 listViewManHinhChinh.setAdapter(typeProductAdapter);
 
                             }
