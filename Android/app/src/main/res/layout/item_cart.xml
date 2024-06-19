@@ -11,6 +11,10 @@
         android:weightSum="10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <CheckBox
+            android:id="@+id/item_cart_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
         <ImageView
             android:id="@+id/item_cart_image"
             android:scaleType="centerCrop"
@@ -84,6 +88,7 @@
                     android:layout_height="wrap_content"/>
 
             </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 

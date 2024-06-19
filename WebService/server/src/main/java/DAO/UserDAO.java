@@ -19,7 +19,7 @@ public class UserDAO {
 
         try {
             connection = Connect.getConnection();
-            String sql = "select id, email,username, isAdmin, createdAt from user";
+            String sql = "select id, email, name, isAdmin, createdAt from user";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -28,7 +28,7 @@ public class UserDAO {
                 user.setEmail(resultSet.getString("email"));
                 user.setName(resultSet.getString("username"));
                 user.setAdmin(resultSet.getBoolean("isAdmin"));
-//                user.setCreatedAt(resultSet.getDate("createdAt"));
+                user.setCreatedAt(resultSet.getDate("createdAt"));
                 listUser.add(user);
             }
         } catch (Exception e) {
@@ -85,23 +85,22 @@ public class UserDAO {
         return checkEmail;
     }
 
-
-    public boolean register(String email, String password,String phoneNumber, String username) {
+    public boolean register(String email, String password, String phoneNumber, String name) {
         Connection connection = null;
         if (checkEmailExist(email)) {
             return false;
         } else {
             try {
                 connection = Connect.getConnection();
-                String insert = "Insert into user( email, password,phoneNumber, username, createdAt) values (?,?,?,?,?)";
+                String insert = "Insert into user(email, password, name, createdAt) values (?,?,?,?)";
                 PreparedStatement preparedStatement = connection.prepareStatement(insert);
                 preparedStatement.setString(1, email);
                 preparedStatement.setString(2, password);
-                preparedStatement.setString(3, phoneNumber);
-                preparedStatement.setString(4, username);
-                preparedStatement.setDate(5, sqlDate);
+//                preparedStatement.setString(3, phoneNumber);
+                preparedStatement.setString(3, name);
+                preparedStatement.setDate(4, sqlDate);
                 int check = preparedStatement.executeUpdate();
-                if (check >= 0) {
+                if (check > 0) {
                     return true;
                 } else {
                     return false;
@@ -112,56 +111,58 @@ public class UserDAO {
             }
         }
     }
-    public User login(String email, String password){
+
+    public User login(String email, String password) {
         Connection connection = null;
-        try{
-            connection = Connect
-                    .getConnection();
-            String sql = "select id, email, isAdmin, phoneNumber , username from user where email = ? AND password = ?";
+        try {
+            connection = Connect.getConnection();
+            String sql = "select id, email, name, isAdmin from user where email = ? AND password = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);
-            preparedStatement.setString(2,password);
+            preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 User user = new User();
                 user.setId(resultSet.getInt("id"));
                 user.setEmail(resultSet.getString("email"));
-                user.setName(resultSet.getString("phoneNumber"));
-                user.setPhoneNumber(resultSet.getString("phoneNumber"));
+                user.setName(resultSet.getString("name"));
+//                user.setPhoneNumber(resultSet.getString("phoneNumber"));
                 user.setAdmin(resultSet.getBoolean("isAdmin"));
                 return user;
             }
-        }catch (SQLException e){
-            throw  new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
         }
-        return  null;
+        return null;
     }
 
     public boolean loginBoolean(String email, String password) {
         Connection connection = null;
-        try{
-            connection = Connect
-                    .getConnection();
-            String sql = "select id, email, isAdmin, phoneNumber , username from user where email = ? AND password = ?";
+        try {
+            connection = Connect.getConnection();
+            String sql = "select id, email, name, isAdmin from user where email = ? AND password = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);
-            preparedStatement.setString(2,password);
+            preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-
                 return true;
             }
-        }catch (SQLException e){
-            throw  new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
         }
-        return  false;
+        return false;
     }
+
     public User getUserById(String id) {
         Connection connection = null;
-        try{
-            connection = Connect
-                    .getConnection();
-            String sql = "select id, email, isAdmin, phoneNumber , username from user where id = ?";
+        try {
+            connection = Connect.getConnection();
+            String sql = "select id, email, name, phoneNumber, isAdmin from user where id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -169,15 +170,17 @@ public class UserDAO {
                 User user = new User();
                 user.setId(resultSet.getInt("id"));
                 user.setEmail(resultSet.getString("email"));
-                user.setName(resultSet.getString("phoneNumber"));
+                user.setName(resultSet.getString("name"));
                 user.setPhoneNumber(resultSet.getString("phoneNumber"));
                 user.setAdmin(resultSet.getBoolean("isAdmin"));
                 return user;
             }
-        }catch (SQLException e){
-            throw  new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            Connect.closeConnection(connection);
         }
-        return  null;
+        return null;
     }
     public boolean updatePassword(String email, String pass){
         Connection connection = null;

@@ -2,7 +2,9 @@ package com.example.appbanhang.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText email, password;
         CompositeDisposable compositeDisposable = new CompositeDisposable();
         APIBanHang apiBanHang;
+        boolean isLogin = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,28 +86,7 @@ public class LoginActivity extends AppCompatActivity {
             Paper.book().write("email", emailString);
             Paper.book().write("password", passwordString);
 
-            compositeDisposable.add(apiBanHang.login(emailString, passwordString)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(
-                                    userModel -> {
-                                        if(userModel.isSuccess()){
-                                            Utils.currentUser = userModel.getResult().get(0);
-                                            Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                            startActivity(intent);
-                                            finish();
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    },
-                                    throwable -> {
-                                        // Log the error and show a Toast message
-                                        throwable.printStackTrace();
-                                        Toast.makeText(getApplicationContext(), "Đã có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                            )
-            );
+            loginDelay(emailString, passwordString);
         }
 
     }
@@ -122,7 +104,49 @@ public class LoginActivity extends AppCompatActivity {
         if(Paper.book().read("email") !=null && Paper.book().read("password") !=null){
             email.setText(Paper.book().read("email"));
             password.setText(Paper.book().read("password"));
+
+            if(Paper.book().read("isLogin") != null){
+                boolean flag =Paper.book().read("isLogin");
+                if (flag){
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            loginDelay(Paper.book().read("email"),Paper.book().read("password"));
+                        }
+                    },1000);
+                }
+            }
         }
+    }
+
+    private void loginDelay(String email,String password) {
+        compositeDisposable.add(apiBanHang.login(email, password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        userModel -> {
+                            if(userModel.isSuccess()){
+                                isLogin = true;
+                                Paper.book().write("isLogin", isLogin);
+
+                                Utils.currentUser = userModel.getResult().get(0);
+                                Paper.book().write("user",  Utils.currentUser);
+                                Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        throwable -> {
+                            // Log the error and show a Toast message
+                            throwable.printStackTrace();
+                            Log.e("API_ERROR", "Error occurred", throwable);
+                            Toast.makeText(getApplicationContext(), "Đã có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                )
+        );
     }
 
     @Override

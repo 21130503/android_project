@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ProductDAO {
     int recordSize = 5;
@@ -61,5 +63,56 @@ public class ProductDAO {
         }
         return list;
     }
+    public Product getProductById(int id) {
+        Connection connection = null;
+        Product product = new Product();
+        try{
+            connection = Connect.getConnection();
+            String sql = "select id, price,image,description, name, type from product where id=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                product.setId(resultSet.getInt("id"));
+                product.setPrice(resultSet.getInt("price"));
+                product.setType(resultSet.getInt("type"));
+                product.setName(resultSet.getString("name"));
+                product.setDescription(resultSet.getString("description"));
+                product.setImage(resultSet.getString("image"));
+            }
 
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+//        System.out.println(product.toString());
+        return  product;
+    }
+    public List<Product> searchProduct(String key) {
+        if(key== null || key.trim().isEmpty()){
+            return  Collections.emptyList();
+        }
+        Connection connection = null;
+        List<Product> products = new ArrayList<>();
+        try{
+            connection =Connect.getConnection();
+            String sql = "select id, price,image,description, name, type from product where name LIKE ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%"+key+"%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                Product product = new Product();
+                product.setId(resultSet.getInt("id"));
+                product.setPrice(resultSet.getInt("price"));
+                product.setType(resultSet.getInt("type"));
+                product.setName(resultSet.getString("name"));
+                product.setDescription(resultSet.getString("description"));
+                product.setImage(resultSet.getString("image"));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return  products;
+    }
 }

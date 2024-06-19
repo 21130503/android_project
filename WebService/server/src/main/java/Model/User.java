@@ -1,6 +1,6 @@
 package Model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class User {
     private int id;
@@ -8,6 +8,8 @@ public class User {
     private String name;
     private boolean isAdmin;
     private String phoneNumber;
+
+    private Date createdAt;
 
     public User() {
 
@@ -64,4 +66,11 @@ public class User {
                 '}';
     }
 
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
 }
