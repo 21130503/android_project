@@ -128,6 +128,9 @@ public class MainActivity extends AppCompatActivity {
                     case 3:
                         Intent viewOrder = new Intent(getApplicationContext(), ViewOrder.class);
                         startActivity(viewOrder);
+                    case 4:
+                        Intent viewManager = new Intent(getApplicationContext(), ManagerActivity.class);
+                        startActivity(viewManager);
                 }
             }
         });
@@ -162,7 +165,9 @@ public class MainActivity extends AppCompatActivity {
                                 typeProducts = typeProductModel.getResults();
                                 if(Utils.currentUser.isAdmin()) {
                                     typeProducts.add(new TypeProduct(200, "Quản lí","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
+
                                 }
+                                typeProducts.add(new TypeProduct(300, "Đăng xuất","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
 //                                typeProducts.add()
                                 System.out.println(typeProducts.size());
                                 System.out.println(typeProducts);
