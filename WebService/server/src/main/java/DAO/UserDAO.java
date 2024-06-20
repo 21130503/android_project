@@ -1,5 +1,6 @@
 package DAO;
 
+import Controller.ForgetPasswordController;
 import Model.User;
 import Services.Connect;
 
@@ -181,7 +182,7 @@ public class UserDAO {
     }
     public boolean updatePassword(String email, String pass){
         Connection connection = null;
-        if (checkEmailExist(email)) {
+        if (!checkEmailExist(email)) {
             return false;
         }else {
             try {
@@ -201,4 +202,6 @@ public class UserDAO {
             }
         }
     }
+
+
 }

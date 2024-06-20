@@ -1,6 +1,6 @@
 package Controller;
 
-import DAO.UserDAO;
+import DAO.ProductDAO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -9,28 +9,27 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Random;
 
-@WebServlet(value = "/newPassword")
-public class NewPasswordController extends HttpServlet {
+@WebServlet(value = "/addProduct")
+public class AddProductController extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String password = req.getParameter("password");
-        HttpSession session = req.getSession();
-        String email = (String)session.getAttribute("email");
-        System.out.println("ảo z");
-        UserDAO userDAO = new UserDAO();
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String name = req.getParameter("name");
+        int price = Integer.parseInt(req.getParameter("price"));
+        String image = req.getParameter("image");
+        String description = req.getParameter("description");
+        int type = Integer.parseInt(req.getParameter("type"));
 
         JsonObject jsonResponse = new JsonObject();
         Gson gson = new Gson();
+        ProductDAO productDAO = new ProductDAO();
 
         boolean status;
         String mess;
-
         try {
-            if (userDAO.updatePassword(email, password)) {
+            if (productDAO.addProduct(name, price, image, description, type)) {
                 status = true;
                 mess = "Thành công";
             } else {
@@ -46,14 +45,8 @@ public class NewPasswordController extends HttpServlet {
         jsonResponse.addProperty("success", status);
         jsonResponse.addProperty("message", mess);
 
-
-
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(gson.toJson(jsonResponse));
-
-
-
-
     }
 }

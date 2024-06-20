@@ -27,10 +27,10 @@ public class OTPActivity extends AppCompatActivity {
 
     EditText otp;
 
-    Button resPass;
+    Button next, back;
 
     APIBanHang apiBanHang;
-    CompositeDisposable compositeDisposable;
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +41,23 @@ public class OTPActivity extends AppCompatActivity {
        initContro();
     }
     private void initContro() {
-        resPass.setOnClickListener(new View.OnClickListener() {
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ResetPassActivity.class);
+                startActivity(intent);
+            }
+        });
+        next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String str_otp = otp.getText().toString().trim();
+                Integer int_otp = Integer.parseInt(str_otp);
+                Toast.makeText(getApplicationContext(), str_otp, Toast.LENGTH_SHORT).show();
                 if(TextUtils.isEmpty(str_otp)){
                     Toast.makeText(getApplicationContext(), "ban chua nhap OTP", Toast.LENGTH_SHORT).show();
                 }else {
-                    compositeDisposable.add(apiBanHang.validationOTP(str_otp)
+                    compositeDisposable.add(apiBanHang.validationOTP(int_otp)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
@@ -74,8 +83,9 @@ public class OTPActivity extends AppCompatActivity {
 
     private void initView() {
         apiBanHang = RetrofitClient.getInstance(Utils.BASR_URL).create(APIBanHang.class);
-        otp = findViewById(R.id.otp);
-        resPass = findViewById(R.id.resPassword);
+        otp = findViewById(R.id.OTP);
+        next = findViewById(R.id.next);
+        back = findViewById(R.id.back);
     }
     @Override
     protected void onDestroy() {

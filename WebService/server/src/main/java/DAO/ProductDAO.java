@@ -62,4 +62,46 @@ public class ProductDAO {
         return list;
     }
 
+    public boolean addProduct(String name, int price, String image, String description, int type){
+        Connection connection = null;
+        ProductDAO productDAO = new ProductDAO();
+        int maxProductId = productDAO.getIndex();
+        try {
+            connection = Connect.getConnection();
+            String query = "Insert into product values(?,?,?,?,?,?)";
+            PreparedStatement pr = connection.prepareStatement(query);
+            pr.setInt(1, maxProductId+1);
+            pr.setString(2, name);
+            pr.setInt(3, price);
+            pr.setString(4, image);
+            pr.setString(5, description);
+            pr.setInt(6, type);
+            int resultSet1 = pr.executeUpdate();
+            if (resultSet1 >= 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (SQLException e){
+            throw  new RuntimeException(e);
+        }
+    }
+    public int getIndex(){
+        Connection connection = null;
+        int maxId = 0;
+        try{
+            connection = Connect.getConnection();
+            String query = "SELECT MAX(id) AS maxId FROM product";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                maxId = rs.getInt("maxId");
+            }
+            return maxId;
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

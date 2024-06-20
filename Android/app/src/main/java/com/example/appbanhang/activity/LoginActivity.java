@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                                     throwable -> {
                                         // Log the error and show a Toast message
                                         throwable.printStackTrace();
-                                        Toast.makeText(getApplicationContext(), "Đã có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(), "Đã có lỗi xảy ra android: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
                                     }
                             )
             );

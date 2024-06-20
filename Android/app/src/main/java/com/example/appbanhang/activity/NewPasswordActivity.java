@@ -29,7 +29,7 @@ public class NewPasswordActivity extends AppCompatActivity {
     Button resetBtn;
     TextView register;
     APIBanHang apiBanHang;
-    CompositeDisposable compositeDisposable;
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

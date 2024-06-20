@@ -9,6 +9,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface APIBanHang {
@@ -22,6 +23,10 @@ public interface APIBanHang {
             @Query("type") int type
     );
 
+    @GET("forgetPassword")
+    Observable<UserModel> validationOTP(
+            @Query("otp") int otp
+    );
     @POST("register")
     @FormUrlEncoded
     Observable<UserModel> register(
@@ -44,17 +49,13 @@ public interface APIBanHang {
             @Field("address") String address,
             @Field("carts") String cart
     );
+
     @POST("forgetPassword")
     @FormUrlEncoded
     Observable<UserModel> resetPass(
             @Field("email") String email
     );
-    @POST("validationOTP")
-    @FormUrlEncoded
-    Observable<UserModel> validationOTP(
-            @Field("otp") String otp
-    );
-    @POST("newPassword")
+    @PUT("forgetPassword")
     @FormUrlEncoded
     Observable<UserModel> newPassword(
             @Field("password") String password
