@@ -18,6 +18,8 @@ import com.example.appbanhang.R;
 import com.example.appbanhang.retrofit.APIBanHang;
 import com.example.appbanhang.retrofit.RetrofitClient;
 import com.example.appbanhang.utils.Utils;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -27,6 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText email, password, confirmPassword, phoneNumber, username ;
     Button registerBtn;
     APIBanHang apiBanHang;
+    FirebaseAuth firebaseAuth;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,33 +76,36 @@ public class RegisterActivity extends AppCompatActivity {
         }else if(TextUtils.isEmpty(phone)){
             Toast.makeText(getApplicationContext(), "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
         }else{
-            compositeDisposable.add(apiBanHang.register(emailStr, usernameStr, passwordStr, passwordStr)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            userModel -> {
-                                System.out.println(userModel);
-                                if(userModel.isSuccess()){
-                                    Utils.currentUser.setEmail(emailStr);
-//                                    Utils.currentUser.set
-                                    Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            },
-                            throwable -> {
-                                // Log the error and show a Toast message
-                                throwable.printStackTrace();
-                                Toast.makeText(getApplicationContext(), "Đã có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                    )
-            );
+            registerData(emailStr,usernameStr,passwordStr,phone);
 
         }
 
+    }
+    private  void  registerData(String emailStr, String usernameStr, String passwordStr,String phone ){
+        compositeDisposable.add(apiBanHang.register(emailStr, usernameStr, passwordStr, phone)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                userModel -> {
+                                    System.out.println(userModel);
+                                    if(userModel.isSuccess()){
+                                        Utils.currentUser.setEmail(emailStr);
+//                                    Utils.currentUser.set
+                                        Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                },
+                                throwable -> {
+                                    // Log the error and show a Toast message
+                                    throwable.printStackTrace();
+                                    Toast.makeText(getApplicationContext(), "Đã có lỗi xảy ra: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                        )
+        );
     }
 
     private void Mapping() {

@@ -58,5 +58,14 @@ public interface APIBanHang {
     Observable<ProductModel> getSearch(
             @Query("key") String key
     );
+    @POST("create-order")
+    @FormUrlEncoded
+    Observable<TypeProductModel> addProduct(
+            @Field("name") String name,
+            @Field("price") String price,
+            @Field("image") String image,
+            @Field("description") String description,
+            @Field("type") String type
+    );
 
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "804812631959",
+    "project_id": "heart-ba13d",
+    "storage_bucket": "heart-ba13d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804812631959:android:e4b4e14c8fd4a058ddded2",
+        "android_client_info": {
+          "package_name": "com.example.appbanhang"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804812631959-iag2tkpsu1749438uh24701o2fobop2e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACpK2VyxF7br7iZYoD9rCYEKhCfDVit4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804812631959-iag2tkpsu1749438uh24701o2fobop2e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
