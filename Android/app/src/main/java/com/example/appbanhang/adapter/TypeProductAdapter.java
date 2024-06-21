@@ -64,7 +64,6 @@ public class TypeProductAdapter extends BaseAdapter {
         }
         viewHolder.textNameProduct.setText(typeProductList.get(position).getName());
         Glide.with(context).load(typeProductList.get(position).getImage()).into(viewHolder.imageProduct);
-
         return convertView;
     }
 }
