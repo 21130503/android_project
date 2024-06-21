@@ -56,6 +56,11 @@ public class TypeProductController extends HttpServlet {
                 throw new IllegalArgumentException("URL hình ảnh không được để trống");
             }
 
+            // Kiểm tra tên loại sản phẩm đã tồn tại
+            if (dao.isTypeProductNameExists(newTypeProduct.getName())) {
+                throw new IllegalArgumentException("Tên loại sản phẩm đã tồn tại");
+            }
+
             // Thêm loại sản phẩm mới vào cơ sở dữ liệu
             boolean success = dao.addTypeProduct(newTypeProduct);
             if (success) {
