@@ -77,4 +77,11 @@ dependencies {
     //Paper- Lưu thông tin người dùng khi thoát app
     implementation ("io.github.pilgr:paperdb:2.7.2")
 
+    //animation
+    implementation ("com.airbnb.android:lottie:6.4.1")
+
+//
+    implementation ("com.github.fornewid:neumorphism:0.3.0")
+
+
 }
