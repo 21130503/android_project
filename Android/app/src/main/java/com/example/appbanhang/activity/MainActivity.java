@@ -2,7 +2,7 @@ package com.example.appbanhang.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -17,11 +17,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import androidx.appcompat.widget.Toolbar;
-
 import android.widget.ViewFlipper;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;

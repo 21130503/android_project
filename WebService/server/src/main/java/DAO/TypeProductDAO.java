@@ -31,6 +31,34 @@ public class TypeProductDAO {
         return list;
     }
 
+    //Kiểm tra trùng tên đối với TypeProduct
+    public boolean isTypeProductNameExists(String name) {
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String query = "SELECT COUNT(*) FROM typeProduct WHERE name = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return false;
+    }
+
+    //Thêm loại sản phẩm mới
     public boolean addTypeProduct(TypeProduct typeProduct) {
         Connection connection = null;
         try {
