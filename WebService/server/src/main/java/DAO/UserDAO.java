@@ -126,7 +126,7 @@ public class UserDAO {
                 user.setId(resultSet.getInt("id"));
                 user.setEmail(resultSet.getString("email"));
                 user.setName(resultSet.getString("name"));
-//                user.setPhoneNumber(resultSet.getString("phoneNumber"));
+                user.setPhoneNumber(resultSet.getString("phoneNumber"));
                 user.setAdmin(resultSet.getBoolean("isAdmin"));
                 return user;
             }
