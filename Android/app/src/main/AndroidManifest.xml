@@ -28,17 +28,12 @@
             android:exported="false" />
 
         <activity
-            android:name=".activity.CheckoutActivity"
             android:name=".activity.ManagerActivity"
             android:exported="false" />
         <activity
             android:name=".activity.SplashscreenActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.SearchActivity"
@@ -51,7 +46,13 @@
             android:exported="false" />
         <activity
             android:name=".activity.LoginActivity"
-            android:exported="false"></activity>
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.RegisterActivity"
             android:exported="false" />
