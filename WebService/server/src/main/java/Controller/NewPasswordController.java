@@ -17,10 +17,12 @@ import java.util.Random;
 public class NewPasswordController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String email = req.getParameter("email");
         String password = req.getParameter("password");
-        HttpSession session = req.getSession();
-        String email = (String)session.getAttribute("email");
-        System.out.println("ảo z");
+
+        System.out.println(email);
+        System.out.println(password);
+        System.out.println("doPUT");
         UserDAO userDAO = new UserDAO();
 
         JsonObject jsonResponse = new JsonObject();
@@ -51,7 +53,6 @@ public class NewPasswordController extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(gson.toJson(jsonResponse));
-
 
 
 

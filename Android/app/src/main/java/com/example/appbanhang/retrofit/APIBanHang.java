@@ -55,9 +55,10 @@ public interface APIBanHang {
     Observable<UserModel> resetPass(
             @Field("email") String email
     );
-    @PUT("forgetPassword")
+    @POST("newPassword")
     @FormUrlEncoded
     Observable<UserModel> newPassword(
+            @Field("email") String email,
             @Field("password") String password
     );
 }

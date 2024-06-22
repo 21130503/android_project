@@ -53,14 +53,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:text="2. Xem OTP trong Email của bạn"
+            android:text="2. Nhập OTP"
             android:textSize="16dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:text="3. Nhập OTP"
+            android:text="3. Nhập Mật Khẩu Mới"
             android:textSize="16dp" />
     </LinearLayout>
 

@@ -53,7 +53,7 @@ public class OTPActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String str_otp = otp.getText().toString().trim();
                 Integer int_otp = Integer.parseInt(str_otp);
-                Toast.makeText(getApplicationContext(), str_otp, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), str_otp, Toast.LENGTH_SHORT).show();
                 if(TextUtils.isEmpty(str_otp)){
                     Toast.makeText(getApplicationContext(), "ban chua nhap OTP", Toast.LENGTH_SHORT).show();
                 }else {
@@ -65,8 +65,11 @@ public class OTPActivity extends AppCompatActivity {
                                     userModel -> {
                                         if (userModel.isSuccess()){
                                             Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(getApplicationContext(), NewPasswordActivity.class);
-                                            startActivity(intent);
+                                            Intent intent = getIntent();
+                                            String value = intent.getStringExtra("email"); // Lấy dữ liệu từ Intent bằng key
+                                            Intent intent2 = new Intent(getApplicationContext(), NewPasswordActivity.class);
+                                            intent2.putExtra("email1", value);
+                                            startActivity(intent2);
                                         }else {
                                             Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
                                         }

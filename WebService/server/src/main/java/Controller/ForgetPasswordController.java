@@ -14,24 +14,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @WebServlet(value = "/forgetPassword")
 public class ForgetPasswordController extends HttpServlet {
-    public String email;
-    public Map<String, Integer> otpMap;
+    public  String  email;
+    public Map<String, Integer> otpMap = new HashMap<>();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("doPOST");
         email = req.getParameter("email");
+        System.out.println(email);
         SendEmail sendEmail = new SendEmail();
         UserDAO userDAO = new UserDAO();
         JsonObject jsonResponse = new JsonObject();
         Gson gson = new Gson();
         HttpSession session = req.getSession();
-        int otpvalue = 0;
+        Integer otpvalue = 0;
         // sending otp
         boolean status;
         String mess;
@@ -41,7 +40,8 @@ public class ForgetPasswordController extends HttpServlet {
                 status = true;
                 mess = "Thành công";
                 Random rand = new Random();
-                otpvalue = rand.nextInt(1255650);
+                otpvalue = 100000 + rand.nextInt(900000);
+                System.out.println(otpvalue);
                 String toEmail = email;
                 sendEmail.sendEmail("nguyenthanhquyen5577@gmail.com", "azal wquf vhly btmr", toEmail, "Hello", "Your OTP is " + otpvalue);
 
@@ -55,8 +55,9 @@ public class ForgetPasswordController extends HttpServlet {
             e.printStackTrace(); // Log the error for debugging
 
         }
-
         otpMap.put(email, otpvalue);
+
+        System.out.println(otpMap.get(email));
         jsonResponse.addProperty("success", status);
         jsonResponse.addProperty("message", mess);
 
@@ -64,8 +65,6 @@ public class ForgetPasswordController extends HttpServlet {
         System.out.println(otpvalue);
         session.setAttribute("EMAIL", email);
 
-        System.out.println("Session ID: " + session.getId());
-        System.out.println("Generated OTP: " + otpvalue);
 
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
@@ -74,7 +73,7 @@ public class ForgetPasswordController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            System.out.println("dopost");
+            System.out.println("doGET");
             String value = req.getParameter("otp");
             int otp = otpMap.get(email);
             System.out.println("OTP in session: " + otp);
@@ -111,39 +110,5 @@ public class ForgetPasswordController extends HttpServlet {
 
     }
 
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String password = req.getParameter("password");
-        System.out.println(email);
-        UserDAO userDAO = new UserDAO();
 
-        JsonObject jsonResponse = new JsonObject();
-        Gson gson = new Gson();
-
-        boolean status;
-        String mess;
-
-        try {
-            if (userDAO.updatePassword(email, password)) {
-                status = true;
-                mess = "Thành công";
-            } else {
-                status = false;
-                mess = "Thất bại";
-            }
-        } catch (Exception e) {
-            status = false;
-            mess = "Đã có lỗi xảy ra: " + e.getMessage();
-            e.printStackTrace(); // Log the error for debugging
-
-        }
-        jsonResponse.addProperty("success", status);
-        jsonResponse.addProperty("message", mess);
-
-
-
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
-        resp.getWriter().write(gson.toJson(jsonResponse));
-    }
 }
