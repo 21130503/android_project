@@ -24,8 +24,12 @@ public class LoginController extends HttpServlet {
         UserDAO userDAO = new UserDAO();
         Gson gson = new Gson();
         JsonObject jsonResponse = new JsonObject();
+
         System.out.println(email); // For debugging purposes
         System.out.println("email"); // For debugging purposes
+
+
+
 
         boolean status;
         String mess;

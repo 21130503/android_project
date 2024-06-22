@@ -48,6 +48,7 @@ public class TypeProductAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
+        System.out.println("Qua adapter : " + typeProductList.size());
         if(viewHolder == null){
             viewHolder = new ViewHolder();
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
