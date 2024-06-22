@@ -26,11 +26,13 @@
         <activity
             android:name=".activity.ResetPassActivity"
             android:exported="false" />
-        <activity
-            android:name=".ResetPassActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".ResetPassActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".activity.CheckoutActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ManagerActivity"
             android:exported="false" />
         <activity
@@ -47,9 +49,6 @@
             android:exported="false" />
         <activity
             android:name=".activity.ViewOrder"
-            android:exported="false" />
-        <activity
-            android:name=".activity.CheckoutActivity"
             android:exported="false" />
         <activity
             android:name=".activity.LoginActivity"

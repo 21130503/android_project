@@ -26,7 +26,7 @@ public class UserDAO {
                 User user = new User();
                 user.setId(resultSet.getInt("id"));
                 user.setEmail(resultSet.getString("email"));
-                user.setName(resultSet.getString("username"));
+                user.setName(resultSet.getString("name"));
                 user.setAdmin(resultSet.getBoolean("isAdmin"));
                 user.setCreatedAt(resultSet.getDate("createdAt"));
                 listUser.add(user);
@@ -45,13 +45,13 @@ public class UserDAO {
         if (checkEmailExist(email)){
             try {
                 connection = Connect.getConnection();
-                String sql = "select id, email,username, isAdmin, createdAt from user where email = ?";
+                String sql = "select id, email,name, isAdmin, createdAt from user where email = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     user.setId(resultSet.getInt("id"));
                     user.setEmail(resultSet.getString("email"));
-                    user.setName(resultSet.getString("username"));
+                    user.setName(resultSet.getString("name"));
                     user.setAdmin(resultSet.getBoolean("isAdmin"));
 //                user.setCreatedAt(resultSet.getDate("createdAt"));
                 }
