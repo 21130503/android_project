@@ -34,7 +34,8 @@ public interface APIBanHang {
             @Field("email") String email,
             @Field("username") String username,
             @Field("password") String password,
-            @Field("phoneNumber") String phoneNumber
+            @Field("phoneNumber") String phoneNumber,
+            @Field("uid") String uid
     );
     @POST("login")
     @FormUrlEncoded
@@ -67,5 +68,11 @@ public interface APIBanHang {
             @Field("description") String description,
             @Field("type") String type
     );
+    @POST("update-token")
+    @FormUrlEncoded
+    Observable<TypeProductModel> updateToken(
+            @Field("idUser") String idUser,
+            @Field("token") String token
+            );
 
 }

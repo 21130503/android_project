@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,8 +19,12 @@ import com.example.appbanhang.R;
 import com.example.appbanhang.retrofit.APIBanHang;
 import com.example.appbanhang.retrofit.RetrofitClient;
 import com.example.appbanhang.utils.Utils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -76,13 +81,28 @@ public class RegisterActivity extends AppCompatActivity {
         }else if(TextUtils.isEmpty(phone)){
             Toast.makeText(getApplicationContext(), "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
         }else{
-            registerData(emailStr,usernameStr,passwordStr,phone);
+            firebaseAuth = FirebaseAuth.getInstance();
+            firebaseAuth.createUserWithEmailAndPassword(emailStr, passwordStr)
+                            .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if(task.isSuccessful()){
+                                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                                        if(user !=null) {
+                                            registerData(emailStr,usernameStr,passwordStr,phone, user.getUid());
+                                        }
+                                    }else {
+                                        Toast.makeText(getApplicationContext(), "Đăng kí không thành công", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+
 
         }
 
     }
-    private  void  registerData(String emailStr, String usernameStr, String passwordStr,String phone ){
-        compositeDisposable.add(apiBanHang.register(emailStr, usernameStr, passwordStr, phone)
+    private  void  registerData(String emailStr, String usernameStr, String passwordStr,String phone ,String uid){
+        compositeDisposable.add(apiBanHang.register(emailStr, usernameStr, passwordStr, phone,uid)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(

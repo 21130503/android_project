@@ -23,6 +23,7 @@ public class RegisterController extends HttpServlet {
         String password = req.getParameter("password");
         String phoneNumber = req.getParameter("phoneNumber");
         String username = req.getParameter("username");
+        String uid = req.getParameter("uid");
         Gson gson = new Gson();
         JsonObject jsonResponse = new JsonObject();
         UserDAO userDAO = new UserDAO();
@@ -33,7 +34,7 @@ public class RegisterController extends HttpServlet {
         List<User> result = new ArrayList<>();
 
         try {
-            if (userDAO.register(email, password, phoneNumber, username)) {
+            if (userDAO.register(email, password, phoneNumber, username,uid)) {
                 status = true;
                 mess = "Thành công";
                 User user = userDAO.login(email, password);

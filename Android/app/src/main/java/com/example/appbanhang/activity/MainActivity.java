@@ -6,6 +6,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.telecom.Call;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -41,7 +43,10 @@ import com.example.appbanhang.retrofit.APIBanHang;
 import com.example.appbanhang.retrofit.RetrofitClient;
 import com.example.appbanhang.retrofit.TypeProductModel;
 import com.example.appbanhang.utils.Utils;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.util.ArrayList;
@@ -79,8 +84,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         apiBanHang = RetrofitClient.getInstance(Utils.BASR_URL).create(APIBanHang.class);
         Mapping(); //ánh xạ
+        getToken();
         ActionBar();
         ActionViewFlipper();
+        getToken();
         Paper.init(this);
         if(Paper.book().read("user") !=null){
             User user = Paper.book().read("user");
@@ -129,8 +136,23 @@ public class MainActivity extends AppCompatActivity {
                         Intent viewOrder = new Intent(getApplicationContext(), ViewOrder.class);
                         startActivity(viewOrder);
                     case 4:
-                        Intent viewManager = new Intent(getApplicationContext(), ManagerActivity.class);
-                        startActivity(viewManager);
+                        if(Utils.currentUser.isAdmin()){
+                            Intent viewManager = new Intent(getApplicationContext(), ManagerActivity.class);
+                            startActivity(viewManager);
+                        }else{
+                            Paper.book().delete("user");
+                            Paper.book().delete("email");
+                            Paper.book().delete("password");
+                            Intent login = new Intent(getApplicationContext(), LoginActivity.class);
+                            FirebaseAuth.getInstance().signOut();
+                            startActivity(login);
+                        }
+                    case 5:
+                        Paper.book().delete("user");
+                        Paper.book().delete("email");
+                        Paper.book().delete("password");
+                        Intent login = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(login);
                 }
             }
         });
@@ -153,6 +175,26 @@ public class MainActivity extends AppCompatActivity {
                         }
                 )
         );
+    }
+    public  void getToken(){
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                if(!TextUtils.isEmpty(s)){
+                    compositeDisposable.add(apiBanHang.updateToken(String.valueOf(Utils.currentUser.getId()),s)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    typeProductModel -> {
+
+                                    },
+                                    throwable -> {
+                                        Log.d("log", throwable.getMessage());
+                                    }
+                            ));
+                }
+            }
+        });
     }
    public void getTypeProduct(){
         compositeDisposable.add(apiBanHang.getTypeProduct()
