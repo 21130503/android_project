@@ -164,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
                                 if(Utils.currentUser.isAdmin()) {
                                     typeProducts.add(new TypeProduct(200, "Quản lí","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
                                 }
-//                                typeProducts.add()
                                 System.out.println(typeProducts.size());
                                 System.out.println(typeProducts);
                                 typeProductAdapter = new TypeProductAdapter(typeProducts, getApplicationContext());

@@ -2,6 +2,7 @@ package com.example.appbanhang.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,11 @@ import com.bumptech.glide.Glide;
 import com.example.appbanhang.Interface.ItemClickListener;
 import com.example.appbanhang.R;
 import com.example.appbanhang.activity.DetailActivity;
+import com.example.appbanhang.model.EventBus.EditDeleteEvent;
 import com.example.appbanhang.model.NewProduct;
 import com.example.appbanhang.model.Product;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -47,12 +51,14 @@ public class NewProductAdapter extends RecyclerView.Adapter<NewProductAdapter.My
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int pos, boolean isLongClick) {
-                if(!isLongClick ){
+                if (!isLongClick) {
 
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra("detail", newProduct);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
+                } else {
+                    EventBus.getDefault().postSticky(new EditDeleteEvent(newProduct));
                 }
             }
         });
@@ -63,7 +69,7 @@ public class NewProductAdapter extends RecyclerView.Adapter<NewProductAdapter.My
         return listNewProduct.size();
     }
 
-    public class MyViewAdapter  extends  RecyclerView.ViewHolder implements View.OnClickListener {
+    public class MyViewAdapter  extends  RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener, View.OnLongClickListener {
         TextView price , name;
         ImageView image;
         private ItemClickListener itemClickListener;
@@ -73,6 +79,8 @@ public class NewProductAdapter extends RecyclerView.Adapter<NewProductAdapter.My
             name = itemView.findViewById(R.id.name_new_product);
             image = itemView.findViewById(R.id.image_new_product);
             itemView.setOnClickListener(this);
+            itemView.setOnCreateContextMenuListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         public void setItemClickListener(ItemClickListener itemClickListener) {
@@ -82,6 +90,18 @@ public class NewProductAdapter extends RecyclerView.Adapter<NewProductAdapter.My
         @Override
         public void onClick(View v) {
             itemClickListener.onClick(v,getAdapterPosition(), false);
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.add(0,0,getAdapterPosition(), "Sửa");
+            menu.add(0,1,getAdapterPosition(), "Xóa");
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            itemClickListener.onClick(v,getAdapterPosition(), true);
+            return false;
         }
     }
 }
