@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.google.android.material.textfield.TextInputEditText
-            android:hint="@string/t_n_s_n_ph_m"
+            android:hint="Tên Sản Phẩm"
             android:id="@+id/name_product"
             android:inputType="text"
             android:layout_width="match_parent"
