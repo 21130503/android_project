@@ -6,10 +6,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.telecom.Call;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -32,16 +36,23 @@ import com.example.appbanhang.adapter.NewProductAdapter;
 import com.example.appbanhang.adapter.TypeProductAdapter;
 import com.example.appbanhang.model.NewProduct;
 import com.example.appbanhang.model.NewProductModel;
+import com.example.appbanhang.model.Product;
 import com.example.appbanhang.model.TypeProduct;
+import com.example.appbanhang.model.User;
 import com.example.appbanhang.retrofit.APIBanHang;
 import com.example.appbanhang.retrofit.RetrofitClient;
 import com.example.appbanhang.retrofit.TypeProductModel;
 import com.example.appbanhang.utils.Utils;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.paperdb.Paper;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -58,11 +69,14 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     TypeProductAdapter typeProductAdapter;
     List<TypeProduct> typeProducts;
-    List<NewProduct> listNewProduct;
+    List<Product> listNewProduct;
     NewProductAdapter newProductAdapter;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     APIBanHang apiBanHang;
-    
+    NotificationBadge bage;
+    FrameLayout frameLayout;
+    ImageView imageSearch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,8 +84,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         apiBanHang = RetrofitClient.getInstance(Utils.BASR_URL).create(APIBanHang.class);
         Mapping(); //ánh xạ
+        getToken();
         ActionBar();
         ActionViewFlipper();
+        getToken();
+        Paper.init(this);
+        if(Paper.book().read("user") !=null){
+            User user = Paper.book().read("user");
+            Utils.currentUser = user;
+        }
         if(isConnected(this)){
             Toast.makeText(getApplicationContext(), "OK", Toast.LENGTH_LONG).show();
             ActionViewFlipper();
@@ -94,12 +115,52 @@ public class MainActivity extends AppCompatActivity {
         listViewManHinhChinh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                switch (position){
-//                    case 0:
-//                        Integer home = new Intent(getApplicationContext(), MainActivity.class);
-//                        startActivities(home);
-//                        break;
-//                }
+                switch (position){
+                    case 0:
+                        Intent home = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(home);
+                        break;
+                    case 1:
+                        Intent laptop = new Intent(getApplicationContext(), PhoneActivity.class);
+                        laptop.putExtra("type",2);
+
+                        startActivity(laptop);
+                        break;
+                    case 2:
+                        Intent phone = new Intent(getApplicationContext(), PhoneActivity.class);
+                        phone.putExtra("type",1);
+
+                        startActivity(phone);
+                        break;
+                    case 3:
+                        Intent viewOrder = new Intent(getApplicationContext(), ViewOrder.class);
+                        startActivity(viewOrder);
+                        break;
+                    case 4:
+                        if(Utils.currentUser.isAdmin()){
+                            Intent viewManager = new Intent(getApplicationContext(), ManagerActivity.class);
+                            Toast.makeText(getApplicationContext(), "OK-admin", Toast.LENGTH_LONG).show();
+
+                            startActivity(viewManager);
+                            break;
+                        }else{
+                            Paper.book().delete("user");
+                            Paper.book().delete("email");
+                            Paper.book().delete("password");
+                            Intent login = new Intent(getApplicationContext(), LoginActivity.class);
+                            FirebaseAuth.getInstance().signOut();
+                            startActivity(login);
+                        }
+                    case 5:
+                        Paper.book().delete("user");
+                        Paper.book().delete("email");
+                        Paper.book().delete("password");
+                        Toast.makeText(getApplicationContext(), "OK-admin", Toast.LENGTH_LONG).show();
+
+                        Intent login = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(login);
+                        break;
+                }
             }
         });
     }
@@ -111,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(
                         newProductModel -> {
                             listNewProduct = newProductModel.getResults();
+
                             System.out.println(listNewProduct);
                             newProductAdapter = new NewProductAdapter(getApplicationContext(), listNewProduct);
                             recyclerViewManHinhChinh.setAdapter(newProductAdapter);
@@ -121,17 +183,45 @@ public class MainActivity extends AppCompatActivity {
                 )
         );
     }
+    public  void getToken(){
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                if(!TextUtils.isEmpty(s)){
+                    compositeDisposable.add(apiBanHang.updateToken(String.valueOf(Utils.currentUser.getId()),s)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    typeProductModel -> {
+
+                                    },
+                                    throwable -> {
+                                        Log.d("log", throwable.getMessage());
+                                    }
+                            ));
+                }
+            }
+        });
+    }
    public void getTypeProduct(){
         compositeDisposable.add(apiBanHang.getTypeProduct()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         typeProductModel -> {
-                            System.out.println(typeProductModel.getResults());
+
                             if(typeProductModel.isSuccess()){
                                 typeProducts = typeProductModel.getResults();
+                                if(Utils.currentUser.isAdmin()) {
+                                    typeProducts.add(new TypeProduct(200, "Quản lí","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
 
+                                }
+                                typeProducts.add(new TypeProduct(300, "Đăng xuất","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
+//                                typeProducts.add()
+                                System.out.println(typeProducts.size());
+                                System.out.println(typeProducts);
                                 typeProductAdapter = new TypeProductAdapter(typeProducts, getApplicationContext());
+                                typeProductAdapter.notifyDataSetChanged();
                                 listViewManHinhChinh.setAdapter(typeProductAdapter);
 
                             }
@@ -151,12 +241,50 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.navigationview);
         listViewManHinhChinh = findViewById(R.id.listviewmanhinhchinh);
         drawerLayout = findViewById((R.id.drawerlayout));
+        bage = findViewById(R.id.menu_count);
+        frameLayout = findViewById(R.id.frameCart_main);
+        imageSearch = findViewById(R.id.image_search);
 //        Khởi tạo list
         typeProducts = new ArrayList<>();
 //        Khoi tạo list
         listNewProduct = new ArrayList<>();
+//        cart
+        if(Utils.carts == null){
+            Utils.carts =new ArrayList<>();
+        }else{
+            int totalItem = 0;
+            for (int i=0; i< Utils.carts.size();i++){
+                totalItem = totalItem + Utils.carts.get(i).getCount();
+            }
+            bage.setText(String.valueOf(totalItem));
+        }
 
+        frameLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+                startActivity(intent);
+            }
+        });
+        imageSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int totalItem = 0;
+        for (int i=0; i< Utils.carts.size();i++){
+            totalItem = totalItem + Utils.carts.get(i).getCount();
+        }
+        bage.setText(String.valueOf(totalItem));
+    }
+
     // Check connect internet
     public boolean isConnected(Context context){
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
