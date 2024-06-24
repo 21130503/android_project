@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -21,6 +22,11 @@ import com.example.appbanhang.R;
 import com.example.appbanhang.retrofit.APIBanHang;
 import com.example.appbanhang.retrofit.RetrofitClient;
 import com.example.appbanhang.utils.Utils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import io.paperdb.Paper;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -31,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     TextView registertxt, resetPass;
     Button btnLogin;
     EditText email, password;
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
         CompositeDisposable compositeDisposable = new CompositeDisposable();
         APIBanHang apiBanHang;
         boolean isLogin = false;
@@ -75,21 +83,66 @@ public class LoginActivity extends AppCompatActivity {
     private void login() {
         String emailString = email.getText().toString().trim();
         String passwordString = password.getText().toString().trim();
-        if(TextUtils.isEmpty(emailString)){
-            Toast.makeText(getApplicationContext(), "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
 
-        }else if(TextUtils.isEmpty(passwordString)){
-            Toast.makeText(getApplicationContext(), "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
-        }
-        else{
-//            Paper
+        if (TextUtils.isEmpty(emailString)) {
+            Toast.makeText(getApplicationContext(), "Vui lòng nhập email", Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(passwordString)) {
+            Toast.makeText(getApplicationContext(), "Vui lòng nhập mật khẩu", Toast.LENGTH_SHORT).show();
+        } else {
+            // Lưu thông tin đăng nhập cục bộ bằng Paper
             Paper.book().write("email", emailString);
             Paper.book().write("password", passwordString);
 
-            loginDelay(emailString, passwordString);
-        }
+<<<<<<< HEAD
 
+            compositeDisposable.add(apiBanHang.login(emailString, passwordString)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    userModel -> {
+                                        if(userModel.isSuccess()){
+                                            Utils.currentUser = userModel.getResult().get(0);
+                                            Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    },
+                                    throwable -> {
+                                        // Log the error and show a Toast message
+                                        throwable.printStackTrace();
+                                        Toast.makeText(getApplicationContext(), "Đã có lỗi xảy ra android: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                            )
+            );
+            loginDelay(emailString, passwordString);
+
+=======
+            // Kiểm tra nếu người dùng đã đăng nhập
+            if (firebaseUser != null) {
+                loginDelay(emailString, passwordString);
+            } else {
+                // Thực hiện đăng nhập bằng Firebase Authentication
+                firebaseAuth.signInWithEmailAndPassword(emailString, passwordString)
+                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Đăng nhập thành công
+                                    loginDelay(emailString, passwordString);
+                                } else {
+                                    // Đăng nhập thất bại
+                                    Toast.makeText(getApplicationContext(), "Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+>>>>>>> huuquy
+        }
     }
+
 
     public void Mapping(){
         Paper.init(this);
@@ -98,7 +151,12 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_login);
         email = findViewById(R.id.email_login);
         password = findViewById(R.id.password_login);
+<<<<<<< HEAD
         resetPass = findViewById(R.id.resetPass);
+=======
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+>>>>>>> huuquy
 
 //        Paper
         if(Paper.book().read("email") !=null && Paper.book().read("password") !=null){

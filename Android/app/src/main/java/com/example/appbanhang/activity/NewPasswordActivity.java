@@ -29,7 +29,7 @@ public class NewPasswordActivity extends AppCompatActivity {
     Button resetBtn;
     TextView register;
     APIBanHang apiBanHang;
-    CompositeDisposable compositeDisposable;
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +37,7 @@ public class NewPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_password);
         initView();
         initContro();
+
     }
 
     private void initContro() {
@@ -51,6 +52,9 @@ public class NewPasswordActivity extends AppCompatActivity {
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = getIntent();
+                String value = intent.getStringExtra("email1");
+                Toast.makeText(getApplicationContext(), value, Toast.LENGTH_SHORT).show();
                 String str_pass = password.getText().toString().trim();
                 String str_confirmPass = confirmPass.getText().toString().trim();
                 if(TextUtils.isEmpty(str_pass)){
@@ -60,15 +64,15 @@ public class NewPasswordActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "ban chua nhap ConfirmPassword", Toast.LENGTH_SHORT).show();
                 }
                 if(str_pass.equals(str_confirmPass)){
-                    compositeDisposable.add(apiBanHang.newPassword(str_pass)
+                    compositeDisposable.add(apiBanHang.newPassword(value,str_pass)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
                                     userModel -> {
                                         if (userModel.isSuccess()){
                                             Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                                            startActivity(intent);
+                                            Intent intent2 = new Intent(getApplicationContext(), LoginActivity.class);
+                                            startActivity(intent2);
                                         }else {
                                             Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
                                         }

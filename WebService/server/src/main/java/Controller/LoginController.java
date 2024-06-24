@@ -25,10 +25,17 @@ public class LoginController extends HttpServlet {
         Gson gson = new Gson();
         JsonObject jsonResponse = new JsonObject();
 
+        System.out.println(email); // For debugging purposes
+        System.out.println(password); // For debugging purposes
+
+
+
 
         boolean status;
         String mess;
         List<User> result = new ArrayList<>();
+        System.out.println("email: " + email);
+        System.out.println("pass: " + password);
 
         try {
             if (userDAO.loginBoolean(email, password)) {
@@ -40,7 +47,7 @@ public class LoginController extends HttpServlet {
                 }
             } else {
                 status = false;
-                mess = "Đã có lỗi xảy ra";
+                mess = "Thất bại";
             }
         } catch (Exception e) {
             status = false;
