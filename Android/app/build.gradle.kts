@@ -28,7 +28,10 @@ android {
     }
     buildFeatures {
         viewBinding = true
+<<<<<<< HEAD
         dataBinding = true
+=======
+>>>>>>> main
     }
 }
 

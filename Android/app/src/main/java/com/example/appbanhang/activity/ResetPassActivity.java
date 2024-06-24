@@ -64,6 +64,8 @@ public class ResetPassActivity extends AppCompatActivity {
                                         if (userModel.isSuccess()){
                                             Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(getApplicationContext(), OTPActivity.class);
+                                            intent.putExtra("email", str_email);
+
                                             startActivity(intent);
                                         }else {
                                             Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();

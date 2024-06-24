@@ -5,8 +5,10 @@ public class TypeProduct {
     String name;
     String image;
 
-    public TypeProduct(int id, String name, String image) {
-        this.id = id;
+    public TypeProduct() {
+    }
+
+    public TypeProduct(String name, String image) {
         this.name = name;
         this.image = image;
     }

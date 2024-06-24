@@ -2,10 +2,12 @@ package com.example.appbanhang.activity;
 
 import android.content.Context;
 import android.content.Intent;
+
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.telecom.Call;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -17,7 +19,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 import android.widget.ViewFlipper;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         Mapping(); //ánh xạ
         ActionBar();
         ActionViewFlipper();
+
         Paper.init(this);
         if(Paper.book().read("user") !=null){
             User user = Paper.book().read("user");
@@ -92,8 +94,7 @@ public class MainActivity extends AppCompatActivity {
             getTypeProduct();
             getNewProduct();
             getEventClick();
-        }
-        else {
+        } else {
             Toast.makeText(getApplicationContext(), "Not connected internet", Toast.LENGTH_LONG).show();
 
         }
@@ -108,20 +109,20 @@ public class MainActivity extends AppCompatActivity {
         listViewManHinhChinh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
+                switch (position) {
                     case 0:
                         Intent home = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(home);
                         break;
                     case 1:
                         Intent laptop = new Intent(getApplicationContext(), PhoneActivity.class);
-                        laptop.putExtra("type",2);
+                        laptop.putExtra("type", 2);
 
                         startActivity(laptop);
                         break;
                     case 2:
                         Intent phone = new Intent(getApplicationContext(), PhoneActivity.class);
-                        phone.putExtra("type",1);
+                        phone.putExtra("type", 1);
 
                         startActivity(phone);
                         break;
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void  getNewProduct(){
+    public void getNewProduct() {
         compositeDisposable.add(apiBanHang.getNewProducts()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -147,19 +148,21 @@ public class MainActivity extends AppCompatActivity {
                             recyclerViewManHinhChinh.setAdapter(newProductAdapter);
                         },
                         throwable -> {
-                            Toast.makeText(getApplicationContext(), "Không kết nối được với server"+ throwable.getMessage(),Toast.LENGTH_LONG).show(); ;
+                            Toast.makeText(getApplicationContext(), "Không kết nối được với server" + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                            ;
                         }
                 )
         );
     }
-   public void getTypeProduct(){
+
+    public void getTypeProduct() {
         compositeDisposable.add(apiBanHang.getTypeProduct()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         typeProductModel -> {
-
-                            if(typeProductModel.isSuccess()){
+                            System.out.println(typeProductModel.getResults());
+                            if (typeProductModel.isSuccess()) {
                                 typeProducts = typeProductModel.getResults();
                                 if(Utils.currentUser.isAdmin()) {
                                     typeProducts.add(new TypeProduct(200, "Quản lí","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
@@ -173,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                 ));
-   }
+    }
 
 
     public void Mapping() {
@@ -190,16 +193,17 @@ public class MainActivity extends AppCompatActivity {
         bage = findViewById(R.id.menu_count);
         frameLayout = findViewById(R.id.frameCart_main);
         imageSearch = findViewById(R.id.image_search);
+
 //        Khởi tạo list
         typeProducts = new ArrayList<>();
 //        Khoi tạo list
         listNewProduct = new ArrayList<>();
 //        cart
-        if(Utils.carts == null){
-            Utils.carts =new ArrayList<>();
-        }else{
+        if (Utils.carts == null) {
+            Utils.carts = new ArrayList<>();
+        } else {
             int totalItem = 0;
-            for (int i=0; i< Utils.carts.size();i++){
+            for (int i = 0; i < Utils.carts.size(); i++) {
                 totalItem = totalItem + Utils.carts.get(i).getCount();
             }
             bage.setText(String.valueOf(totalItem));
@@ -225,23 +229,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         int totalItem = 0;
-        for (int i=0; i< Utils.carts.size();i++){
+        for (int i = 0; i < Utils.carts.size(); i++) {
             totalItem = totalItem + Utils.carts.get(i).getCount();
         }
         bage.setText(String.valueOf(totalItem));
     }
 
     // Check connect internet
-    public boolean isConnected(Context context){
+    public boolean isConnected(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
         NetworkInfo wifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         NetworkInfo mobile = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        if((wifi !=null && wifi.isConnected()) || (mobile !=null && mobile.isConnected())){
-            return  true;
+        if ((wifi != null && wifi.isConnected()) || (mobile != null && mobile.isConnected())) {
+            return true;
         }
-        return  false;
+        return false;
 
     }
+
     public void ActionBar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -273,6 +278,12 @@ public class MainActivity extends AppCompatActivity {
         Animation slide_out = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_out_right);
         viewFlipper.setInAnimation(slide_in);
         viewFlipper.setOutAnimation(slide_out);
+    }
+
+    //Điều hướng tới Tạo loại sản phẩm mới
+    public void goToTypeProductActivity(View view) {
+        Intent intent = new Intent(MainActivity.this, TypeProductActivity.class);
+        startActivity(intent);
     }
 
     @Override

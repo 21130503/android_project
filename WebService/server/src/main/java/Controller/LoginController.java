@@ -25,6 +25,11 @@ public class LoginController extends HttpServlet {
         Gson gson = new Gson();
         JsonObject jsonResponse = new JsonObject();
 
+        System.out.println(email); // For debugging purposes
+        System.out.println(password); // For debugging purposes
+
+
+
 
         boolean status;
         String mess;
@@ -40,7 +45,7 @@ public class LoginController extends HttpServlet {
                 }
             } else {
                 status = false;
-                mess = "Đã có lỗi xảy ra";
+                mess = "Thất bại";
             }
         } catch (Exception e) {
             status = false;
