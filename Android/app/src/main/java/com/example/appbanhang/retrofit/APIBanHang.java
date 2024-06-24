@@ -6,6 +6,8 @@ import com.example.appbanhang.model.ProductModel;
 import com.example.appbanhang.model.UserModel;
 
 import io.reactivex.rxjava3.core.Observable;
+import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -16,8 +18,10 @@ import retrofit2.http.Query;
 public interface APIBanHang {
     @GET("typeProduct")
     Observable<TypeProductModel> getTypeProduct();
+
     @GET("newProduct")
     Observable<NewProductModel> getNewProducts();
+
     @GET("getProductByType")
     Observable<ProductModel> getProducts(
             @Query("page") int page,
@@ -36,12 +40,14 @@ public interface APIBanHang {
             @Field("password") String password,
             @Field("phoneNumber") String phoneNumber
     );
+
     @POST("login")
     @FormUrlEncoded
     Observable<UserModel> login(
             @Field("email") String email,
             @Field("password") String password
     );
+
     @POST("create-order")
     @FormUrlEncoded
     Observable<OrderModel> createOder(
@@ -67,10 +73,12 @@ public interface APIBanHang {
     Observable<OrderModel> getViewOrder(
             @Query("idUser") int idUser
     );
+
     @GET("search")
     Observable<ProductModel> getSearch(
             @Query("key") String key
     );
 
-
+    @POST("typeProduct")
+    Observable<TypeProductModel> addTypeProduct(@Body TypeProduct typeProduct);
 }
