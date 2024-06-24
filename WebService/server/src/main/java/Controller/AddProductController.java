@@ -19,7 +19,7 @@ import java.util.Random;
 @WebServlet(value = "/addProduct")
 public class AddProductController extends HttpServlet {
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
         int price = Integer.parseInt(req.getParameter("price"));
         String image = req.getParameter("image");

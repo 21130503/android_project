@@ -28,6 +28,15 @@ public interface APIBanHang {
     Observable<UserModel> validationOTP(
             @Query("otp") int otp
     );
+
+    @GET("get-order")
+    Observable<OrderModel> getViewOrder(
+            @Query("idUser") int idUser
+    );
+    @GET("search")
+    Observable<ProductModel> getSearch(
+            @Query("key") String key
+    );
     @POST("register")
     @FormUrlEncoded
     Observable<UserModel> register(
@@ -62,15 +71,17 @@ public interface APIBanHang {
             @Field("email") String email,
             @Field("password") String password
     );
+    @POST("addProduct")
+    @FormUrlEncoded
+    Observable<ProductModel> addProduct(
+            @Field("name") String name,
+            @Field("price") String price,
+            @Field("image") String image,
+            @Field("description") String description,
+            @Field("type") int type
+    );
 
-    @GET("get-order")
-    Observable<OrderModel> getViewOrder(
-            @Query("idUser") int idUser
-    );
-    @GET("search")
-    Observable<ProductModel> getSearch(
-            @Query("key") String key
-    );
+
 
 
 }

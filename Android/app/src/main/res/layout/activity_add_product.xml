@@ -7,6 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".activity.AddProductActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:background="#B2B4C1"
+        app:title="Thêm Sản Phẩm"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023" />
+
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="380dp"
@@ -21,7 +33,7 @@
         app:layout_constraintHorizontal_bias="0.466"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.176">
+        app:layout_constraintVertical_bias="0.273">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:text="Name:"
+                android:text="Tên:"
                 android:textColor="@color/black"
                 android:textSize="20dp" />
 
@@ -58,17 +70,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:text="Price:"
+                android:text="Giá:"
                 android:textColor="@color/black"
                 android:textSize="20dp" />
 
             <EditText
                 android:id="@+id/price"
                 android:layout_width="0dp"
-                android:inputType="number"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_weight="3" />
+                android:layout_weight="3"
+                android:inputType="number" />
         </LinearLayout>
 
         <LinearLayout
@@ -82,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Description :"
+                android:text="Mô Tả :"
                 android:textColor="@color/black"
                 android:textSize="20dp" />
 
@@ -105,17 +117,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:text="Type:"
+                android:text="Loại:"
                 android:textColor="@color/black"
                 android:textSize="20dp" />
 
-            <TextView
+            <Spinner
                 android:id="@+id/type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_weight="3"
-                android:text="Select type product"
                 android:textSize="20dp" />
         </LinearLayout>
 
