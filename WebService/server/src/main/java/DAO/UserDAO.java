@@ -19,14 +19,14 @@ public class UserDAO {
 
         try {
             connection = Connect.getConnection();
-            String sql = "select id, email, name, isAdmin, createdAt from user";
+            String sql = "select id, email, username, isAdmin, createdAt from user";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 User user = new User();
                 user.setId(resultSet.getInt("id"));
                 user.setEmail(resultSet.getString("email"));
-                user.setName(resultSet.getString("name"));
+                user.setName(resultSet.getString("username"));
                 user.setAdmin(resultSet.getBoolean("isAdmin"));
                 user.setCreatedAt(resultSet.getDate("createdAt"));
                 listUser.add(user);
@@ -45,13 +45,13 @@ public class UserDAO {
         if (checkEmailExist(email)){
             try {
                 connection = Connect.getConnection();
-                String sql = "select id, email,name, isAdmin, createdAt from user where email = ?";
+                String sql = "select id, email,username, isAdmin, createdAt from user where email = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     user.setId(resultSet.getInt("id"));
                     user.setEmail(resultSet.getString("email"));
-                    user.setName(resultSet.getString("name"));
+                    user.setName(resultSet.getString("username"));
                     user.setAdmin(resultSet.getBoolean("isAdmin"));
 //                user.setCreatedAt(resultSet.getDate("createdAt"));
                 }
@@ -92,7 +92,7 @@ public class UserDAO {
         } else {
             try {
                 connection = Connect.getConnection();
-                String insert = "Insert into user(email, password, name, createdAt) values (?,?,?,?)";
+                String insert = "Insert into user(email, password, username, createdAt) values (?,?,?,?)";
                 PreparedStatement preparedStatement = connection.prepareStatement(insert);
                 preparedStatement.setString(1, email);
                 preparedStatement.setString(2, password);
@@ -116,7 +116,7 @@ public class UserDAO {
         Connection connection = null;
         try {
             connection = Connect.getConnection();
-            String sql = "select id, email, name, isAdmin from user where email = ? AND password = ?";
+            String sql = "select id, email, username, isAdmin, phoneNumber from user where email = ? AND password = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, password);
@@ -125,7 +125,7 @@ public class UserDAO {
                 User user = new User();
                 user.setId(resultSet.getInt("id"));
                 user.setEmail(resultSet.getString("email"));
-                user.setName(resultSet.getString("name"));
+                user.setName(resultSet.getString("username"));
                 user.setPhoneNumber(resultSet.getString("phoneNumber"));
                 user.setAdmin(resultSet.getBoolean("isAdmin"));
                 return user;
