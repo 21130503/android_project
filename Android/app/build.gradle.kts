@@ -26,6 +26,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -65,5 +68,20 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel:2.4.0")
 // Optional - Use LiveData with Kotlin Coroutines
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
+
+//    Notification
+    implementation ("com.nex3z:notification-badge:1.0.4")
+//    Green ROBOT
+    implementation("org.greenrobot:eventbus:3.3.1")
+
+    //Paper- Lưu thông tin người dùng khi thoát app
+    implementation ("io.github.pilgr:paperdb:2.7.2")
+
+    //animation
+    implementation ("com.airbnb.android:lottie:6.4.1")
+
+//
+    implementation ("com.github.fornewid:neumorphism:0.3.0")
+
 
 }

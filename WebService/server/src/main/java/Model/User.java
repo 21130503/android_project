@@ -1,12 +1,14 @@
 package Model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class User {
     private int id;
     private String email;
     private String name;
     private boolean isAdmin;
+    private String phoneNumber;
+
     private Date createdAt;
 
     public User() {
@@ -45,12 +47,12 @@ public class User {
         isAdmin = admin;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
@@ -60,7 +62,15 @@ public class User {
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
                 ", isAdmin=" + isAdmin +
-                ", createdAt=" + createdAt +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
     }
 }

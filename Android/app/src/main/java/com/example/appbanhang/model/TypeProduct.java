@@ -5,8 +5,10 @@ public class TypeProduct {
     String name;
     String image;
 
-    public TypeProduct(int id, String nameProduct, String imageProduct) {
-        this.id = id;
+    public TypeProduct() {
+    }
+
+    public TypeProduct(String name, String image) {
         this.name = name;
         this.image = image;
     }
@@ -33,5 +35,14 @@ public class TypeProduct {
 
     public void setImage(String imageProduct) {
         this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "TypeProduct{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", image='" + image + '\'' +
+                '}';
     }
 }
