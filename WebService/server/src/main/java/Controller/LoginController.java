@@ -34,6 +34,8 @@ public class LoginController extends HttpServlet {
         boolean status;
         String mess;
         List<User> result = new ArrayList<>();
+        System.out.println("email: " + email);
+        System.out.println("pass: " + password);
 
         try {
             if (userDAO.loginBoolean(email, password)) {

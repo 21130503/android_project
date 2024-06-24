@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -32,7 +33,6 @@
         <activity
             android:name=".activity.ResetPassActivity"
             android:exported="false" />
-<<<<<<< HEAD
 
 =======
 <!--        <activity-->
@@ -41,15 +41,10 @@
         <activity
             android:name=".activity.CheckoutActivity"
             android:exported="false" />
->>>>>>> main
         <activity
             android:name=".activity.ManagerActivity"
             android:exported="false" />
-        <activity
-            android:name=".activity.SplashscreenActivity"
-            android:exported="false">
 
-        </activity>
         <activity
             android:name=".activity.SearchActivity"
             android:exported="false" />

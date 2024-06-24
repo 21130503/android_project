@@ -38,7 +38,8 @@ public interface APIBanHang {
             @Field("email") String email,
             @Field("username") String username,
             @Field("password") String password,
-            @Field("phoneNumber") String phoneNumber
+            @Field("phoneNumber") String phoneNumber,
+            @Field("uid") String uid
     );
 
     @POST("login")
@@ -78,6 +79,21 @@ public interface APIBanHang {
     Observable<ProductModel> getSearch(
             @Query("key") String key
     );
+    @POST("create-order")
+    @FormUrlEncoded
+    Observable<TypeProductModel> addProduct(
+            @Field("name") String name,
+            @Field("price") String price,
+            @Field("image") String image,
+            @Field("description") String description,
+            @Field("type") String type
+    );
+    @POST("update-token")
+    @FormUrlEncoded
+    Observable<TypeProductModel> updateToken(
+            @Field("idUser") String idUser,
+            @Field("token") String token
+            );
 
     @POST("typeProduct")
     Observable<TypeProductModel> addTypeProduct(@Body TypeProduct typeProduct);
