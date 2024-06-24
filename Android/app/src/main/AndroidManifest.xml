@@ -32,21 +32,23 @@
         <activity
             android:name=".activity.ResetPassActivity"
             android:exported="false" />
-        <activity
-            android:name=".ResetPassActivity"
-            android:exported="false" />
+<<<<<<< HEAD
+
+=======
+<!--        <activity-->
+<!--            android:name=".ResetPassActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".activity.CheckoutActivity"
+            android:exported="false" />
+>>>>>>> main
+        <activity
             android:name=".activity.ManagerActivity"
             android:exported="false" />
         <activity
             android:name=".activity.SplashscreenActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.SearchActivity"
@@ -55,11 +57,14 @@
             android:name=".activity.ViewOrder"
             android:exported="false" />
         <activity
-            android:name=".activity.CheckoutActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.LoginActivity"
-            android:exported="false"></activity>
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.RegisterActivity"
             android:exported="false" />

@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.ProductDAO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -8,35 +9,38 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Random;
 
-@WebServlet(value = "/validationOTP")
-public class OTPvaildationController extends HttpServlet {
+@WebServlet(value = "/addProduct")
+public class AddProductController extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int value = Integer.parseInt(req.getParameter("otp"));
-        HttpSession session = req.getSession();
-        int otp = (int) session.getAttribute("otp");
-        System.out.println("aaa"); 
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String name = req.getParameter("name");
+        int price = Integer.parseInt(req.getParameter("price"));
+        String image = req.getParameter("image");
+        String description = req.getParameter("description");
+        int type = Integer.parseInt(req.getParameter("type"));
+
         JsonObject jsonResponse = new JsonObject();
         Gson gson = new Gson();
+        ProductDAO productDAO = new ProductDAO();
 
         boolean status;
         String mess;
-
         try {
-            if (value == otp) {
+            if (productDAO.addProduct(name, price, image, description, type)) {
                 status = true;
                 mess = "Thành công";
             } else {
                 status = false;
-                mess = "OTP không chính xác";
+                mess = "Thất bại";
             }
         } catch (Exception e) {
             status = false;
             mess = "Đã có lỗi xảy ra: " + e.getMessage();
             e.printStackTrace(); // Log the error for debugging
+
         }
         jsonResponse.addProperty("success", status);
         jsonResponse.addProperty("message", mess);

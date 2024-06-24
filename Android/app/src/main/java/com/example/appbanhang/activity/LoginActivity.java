@@ -86,7 +86,31 @@ public class LoginActivity extends AppCompatActivity {
             Paper.book().write("email", emailString);
             Paper.book().write("password", passwordString);
 
+
+            compositeDisposable.add(apiBanHang.login(emailString, passwordString)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    userModel -> {
+                                        if(userModel.isSuccess()){
+                                            Utils.currentUser = userModel.getResult().get(0);
+                                            Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    },
+                                    throwable -> {
+                                        // Log the error and show a Toast message
+                                        throwable.printStackTrace();
+                                        Toast.makeText(getApplicationContext(), "Đã có lỗi xảy ra android: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                            )
+            );
             loginDelay(emailString, passwordString);
+
         }
 
     }
