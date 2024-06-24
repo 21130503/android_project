@@ -129,17 +129,17 @@ public class LoginActivity extends AppCompatActivity {
             email.setText(Paper.book().read("email"));
             password.setText(Paper.book().read("password"));
 
-            if(Paper.book().read("isLogin") != null){
-                boolean flag =Paper.book().read("isLogin");
-                if (flag){
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            loginDelay(Paper.book().read("email"),Paper.book().read("password"));
-                        }
-                    },1000);
-                }
-            }
+//            if(Paper.book().read("isLogin") != null){
+//                boolean flag =Paper.book().read("isLogin");
+//                if (flag){
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            loginDelay(Paper.book().read("email"),Paper.book().read("password"));
+//                        }
+//                    },1000);
+//                }
+//            }
         }
     }
 

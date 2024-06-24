@@ -26,6 +26,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    viewBinding {
+        enable = true
+    }
 }
 
 dependencies {
@@ -40,6 +43,8 @@ dependencies {
 //    glider
 //    androidTestImplementation "com.github.bumptech.glide:glide:4.16.0"
     implementation("com.github.bumptech.glide:glide:4.16.0")
+//    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
     // Hilt Dependency Injection
     implementation("com.google.dagger:hilt-android:2.40.5")
@@ -82,3 +87,4 @@ dependencies {
 
 
 }
+
