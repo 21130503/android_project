@@ -79,6 +79,7 @@ public class UserDAO {
                 if (check >= 0) {
                     return true;
                 } else {
+                    System.out.println("");
                     return false;
                 }
 
@@ -101,7 +102,7 @@ public class UserDAO {
                 User user = new User();
                 user.setId(resultSet.getInt("id"));
                 user.setEmail(resultSet.getString("email"));
-                user.setName(resultSet.getString("phoneNumber"));
+                user.setName(resultSet.getString("username"));
                 user.setPhoneNumber(resultSet.getString("phoneNumber"));
                 user.setAdmin(resultSet.getBoolean("isAdmin"));
                 return user;

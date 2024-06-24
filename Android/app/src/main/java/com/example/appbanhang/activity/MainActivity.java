@@ -135,10 +135,14 @@ public class MainActivity extends AppCompatActivity {
                     case 3:
                         Intent viewOrder = new Intent(getApplicationContext(), ViewOrder.class);
                         startActivity(viewOrder);
+                        break;
                     case 4:
                         if(Utils.currentUser.isAdmin()){
                             Intent viewManager = new Intent(getApplicationContext(), ManagerActivity.class);
+                            Toast.makeText(getApplicationContext(), "OK-admin", Toast.LENGTH_LONG).show();
+
                             startActivity(viewManager);
+                            break;
                         }else{
                             Paper.book().delete("user");
                             Paper.book().delete("email");
@@ -151,8 +155,11 @@ public class MainActivity extends AppCompatActivity {
                         Paper.book().delete("user");
                         Paper.book().delete("email");
                         Paper.book().delete("password");
+                        Toast.makeText(getApplicationContext(), "OK-admin", Toast.LENGTH_LONG).show();
+
                         Intent login = new Intent(getApplicationContext(), LoginActivity.class);
                         startActivity(login);
+                        break;
                 }
             }
         });
@@ -205,10 +212,10 @@ public class MainActivity extends AppCompatActivity {
 
                             if(typeProductModel.isSuccess()){
                                 typeProducts = typeProductModel.getResults();
-                                if(Utils.currentUser.isAdmin()) {
+//                                if(Utils.currentUser.isAdmin()) {
                                     typeProducts.add(new TypeProduct(200, "Quản lí","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
 
-                                }
+//                                }
                                 typeProducts.add(new TypeProduct(300, "Đăng xuất","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
 //                                typeProducts.add()
                                 System.out.println(typeProducts.size());
