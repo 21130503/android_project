@@ -93,8 +93,6 @@ public class LoginActivity extends AppCompatActivity {
             Paper.book().write("email", emailString);
             Paper.book().write("password", passwordString);
 
-<<<<<<< HEAD
-
             compositeDisposable.add(apiBanHang.login(emailString, passwordString)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -119,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
             );
             loginDelay(emailString, passwordString);
 
-=======
+
             // Kiểm tra nếu người dùng đã đăng nhập
             if (firebaseUser != null) {
                 loginDelay(emailString, passwordString);
@@ -139,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
             }
->>>>>>> huuquy
+
         }
     }
 
@@ -151,12 +149,12 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_login);
         email = findViewById(R.id.email_login);
         password = findViewById(R.id.password_login);
-<<<<<<< HEAD
+
         resetPass = findViewById(R.id.resetPass);
-=======
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
->>>>>>> huuquy
+
 
 //        Paper
         if(Paper.book().read("email") !=null && Paper.book().read("password") !=null){

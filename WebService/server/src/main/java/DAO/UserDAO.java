@@ -85,24 +85,26 @@ public class UserDAO {
         return checkEmail;
     }
 
-    public boolean register(String email, String password, String phoneNumber, String name) {
+    public boolean register(String email, String password,String phoneNumber, String username, String uid) {
         Connection connection = null;
         if (checkEmailExist(email)) {
             return false;
         } else {
             try {
                 connection = Connect.getConnection();
-                String insert = "Insert into user(email, password, username, createdAt) values (?,?,?,?)";
+                String insert = "Insert into user( email, password,phoneNumber, username, createdAt,uid) values (?,?,?,?,?,?)";
                 PreparedStatement preparedStatement = connection.prepareStatement(insert);
                 preparedStatement.setString(1, email);
                 preparedStatement.setString(2, password);
-//                preparedStatement.setString(3, phoneNumber);
-                preparedStatement.setString(3, name);
-                preparedStatement.setDate(4, sqlDate);
+                preparedStatement.setString(3, phoneNumber);
+                preparedStatement.setString(4, username);
+                preparedStatement.setDate(5, sqlDate);
+                preparedStatement.setString(6,uid);
                 int check = preparedStatement.executeUpdate();
-                if (check > 0) {
+                if (check >= 0) {
                     return true;
                 } else {
+                    System.out.println("");
                     return false;
                 }
 
@@ -111,7 +113,6 @@ public class UserDAO {
             }
         }
     }
-
     public User login(String email, String password) {
         Connection connection = null;
         try {
@@ -202,6 +203,26 @@ public class UserDAO {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+    }
+    public  boolean updateToken(String idUser, String token){
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "update user set token = ? where id= ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,token);
+            preparedStatement.setString(2,idUser);
+            int check = preparedStatement.executeUpdate();
+            if(check > 0){
+                return  true;
+            }
+            else{
+                return  false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -3,6 +3,7 @@ package com.example.appbanhang.retrofit;
 import com.example.appbanhang.model.NewProductModel;
 import com.example.appbanhang.model.OrderModel;
 import com.example.appbanhang.model.ProductModel;
+import com.example.appbanhang.model.TypeProduct;
 import com.example.appbanhang.model.UserModel;
 
 import io.reactivex.rxjava3.core.Observable;
