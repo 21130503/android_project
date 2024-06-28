@@ -1,7 +1,11 @@
 package com.example.appbanhang.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -15,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appbanhang.R;
 import com.example.appbanhang.adapter.OrderAdapter;
+import com.example.appbanhang.adapter.OrderManagerAdapter;
 import com.example.appbanhang.retrofit.APIBanHang;
 import com.example.appbanhang.retrofit.RetrofitClient;
 import com.example.appbanhang.utils.Utils;
@@ -28,6 +33,8 @@ public class ViewOrderManager extends AppCompatActivity {
     APIBanHang apiBanHang;
     RecyclerView recyclerView;
     Toolbar toolbar_order;
+    String status = "Đang chuẩn bị";
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,16 +48,16 @@ public class ViewOrderManager extends AppCompatActivity {
         });
         Mapping();
         ActionToolBar();
-        getOrder();
+        getOrder(status);
     }
-    private void getOrder() {
-        compositeDisposable.add(apiBanHang.getViewOrder(Utils.currentUser.getId())
+    private void getOrder(String status) {
+        compositeDisposable.add(apiBanHang.getViewOrderManager(status)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         orderModel -> {
                             if(orderModel.isSuccess()){
-                                OrderAdapter orderAdapter = new OrderAdapter(getApplicationContext(), orderModel.getResults());
+                                OrderManagerAdapter orderAdapter = new OrderManagerAdapter(getApplicationContext(), orderModel.getResults());
                                 recyclerView.setAdapter(orderAdapter);
                                 Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
 
@@ -82,8 +89,25 @@ public class ViewOrderManager extends AppCompatActivity {
         apiBanHang = RetrofitClient.getInstance(Utils.BASR_URL).create(APIBanHang.class);
         recyclerView = findViewById(R.id.recyclerview_order);
         toolbar_order= findViewById(R.id.toolbar_view_order);
+        spinner = findViewById(R.id.spinner);
+        String[] count = new String[]{"Đang chuẩn bị","Đã giao cho đơn vị vận chuyển","Đang chờ nhận", "Đã giao", "Đã hủy" };
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,count);
+        spinner.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                status = count[position];
+                getOrder(status);
+                Log.d("SpinnerSelection", "Giá trị đã chọn: " + status);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
     }
 

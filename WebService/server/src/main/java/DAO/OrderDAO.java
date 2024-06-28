@@ -200,4 +200,30 @@ public int mainOrder(String idUser, String address, String totalPrice) {
             throw new RuntimeException(e);
         }
     }
+    public List<Order> getOrderByStatus(String status) {
+        Connection connection = null;
+        List<Order> orders = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
+        try{
+            connection = Connect.getConnection();
+            String sql = "SELECT id,address,phoneNumber, totalPrice, status FROM orderproduct where status LIKE ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "%" + status +"%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                Order order = new Order();
+                order.setId(resultSet.getInt("id"));
+                order.setStatus(resultSet.getString("status"));
+                order.setAddress(resultSet.getString("address"));
+                order.setPhoneNumber(resultSet.getString("phoneNumber"));
+                order.setTotal(resultSet.getString("totalPrice"));
+                order.setProducts(this.getCt_Order(resultSet.getInt("id")).getProductList());
+                orders.add(order);
+            }
+            return  orders;
+        }
+        catch (SQLException e) {
+            throw  new RuntimeException(e);
+        }
+    }
 }

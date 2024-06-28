@@ -55,6 +55,10 @@ public interface APIBanHang {
     Observable<OrderModel> getViewOrder(
             @Query("idUser") int idUser
     );
+    @GET("get-order-status")
+    Observable<OrderModel> getViewOrderManager(
+            @Query("status") String status
+    );
     @GET("search")
     Observable<ProductModel> getSearch(
             @Query("key") String key
