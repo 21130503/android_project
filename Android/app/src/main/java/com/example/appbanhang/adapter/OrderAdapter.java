@@ -54,7 +54,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyViewOrder>
         holder.order.setText("Đơn hàng: " + String.valueOf(order.getId()));
         holder.status_order.setText("Trạng thái đơn: " + order.getStatus());
         LinearLayoutManager layoutManager = new LinearLayoutManager(
-          holder.recyclerViewOrder.getContext(),
+                holder.recyclerViewOrder.getContext(),
                 LinearLayoutManager.VERTICAL,
                 false
         );

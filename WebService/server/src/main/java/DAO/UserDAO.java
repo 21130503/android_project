@@ -79,7 +79,7 @@ public class UserDAO {
                 if (check >= 0) {
                     return true;
                 } else {
-                    System.out.println("");
+
                     return false;
                 }
 
@@ -105,6 +105,8 @@ public class UserDAO {
                 user.setName(resultSet.getString("username"));
                 user.setPhoneNumber(resultSet.getString("phoneNumber"));
                 user.setAdmin(resultSet.getBoolean("isAdmin"));
+                System.out.println(user);
+
                 return user;
             }
         }catch (SQLException e){
@@ -116,8 +118,7 @@ public class UserDAO {
     public boolean loginBoolean(String email, String password) {
         Connection connection = null;
         try{
-            connection = Connect
-                    .getConnection();
+            connection = Connect.getConnection();
             String sql = "select id, email, isAdmin, phoneNumber , username from user where email = ? AND password = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);

@@ -181,4 +181,23 @@ public int mainOrder(String idUser, String address, String totalPrice) {
         return  ctOrder;
 
     }
+    public boolean updateStatus(int idOrder,String status) {
+        Connection connection = null;
+        try{
+            connection = Connect.getConnection();
+            String sql = "update order set status= ? where id= ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,status);
+            preparedStatement.setInt(2,idOrder);
+            int check = preparedStatement.executeUpdate();
+            if(check > 0 ){
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -140,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
                         if(Utils.currentUser.isAdmin()){
                             Intent viewManager = new Intent(getApplicationContext(), ManagerActivity.class);
                             Toast.makeText(getApplicationContext(), "OK-admin", Toast.LENGTH_LONG).show();
-
                             startActivity(viewManager);
                             break;
                         }else{
@@ -150,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
                             Intent login = new Intent(getApplicationContext(), LoginActivity.class);
                             FirebaseAuth.getInstance().signOut();
                             startActivity(login);
+                            break;
                         }
                     case 5:
                         Paper.book().delete("user");
@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Intent login = new Intent(getApplicationContext(), LoginActivity.class);
                         startActivity(login);
+                        FirebaseAuth.getInstance().signOut();
                         break;
                 }
             }
@@ -212,10 +213,10 @@ public class MainActivity extends AppCompatActivity {
 
                             if(typeProductModel.isSuccess()){
                                 typeProducts = typeProductModel.getResults();
-//                                if(Utils.currentUser.isAdmin()) {
+                                if(Utils.currentUser.isAdmin()) {
                                     typeProducts.add(new TypeProduct(200, "Quản lí","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
 
-//                                }
+                                }
                                 typeProducts.add(new TypeProduct(300, "Đăng xuất","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
 //                                typeProducts.add()
                                 System.out.println(typeProducts.size());

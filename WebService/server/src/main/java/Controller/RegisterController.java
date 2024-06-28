@@ -28,6 +28,7 @@ public class RegisterController extends HttpServlet {
         JsonObject jsonResponse = new JsonObject();
         UserDAO userDAO = new UserDAO();
         System.out.println(email); // For debugging purposes
+        System.out.println("uid : " + uid); // For debugging purposes
 
         boolean status;
         String mess;

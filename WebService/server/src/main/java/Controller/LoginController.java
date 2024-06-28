@@ -37,6 +37,8 @@ public class LoginController extends HttpServlet {
                 status = true;
                 mess = "Thành công";
                 User user = userDAO.login(email, password);
+                System.out.println("Hello");
+                System.out.println(user);
                 if (user != null) {
                     result.add(user);
                 }
