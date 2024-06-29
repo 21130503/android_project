@@ -185,7 +185,7 @@ public int mainOrder(String idUser, String address, String totalPrice) {
         Connection connection = null;
         try{
             connection = Connect.getConnection();
-            String sql = "update order set status= ? where id= ?";
+            String sql = "update orderproduct set status= ? where id= ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1,status);
             preparedStatement.setInt(2,idOrder);

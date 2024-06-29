@@ -10,8 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.appbanhang.Interface.ItemClickListener;
 import com.example.appbanhang.R;
+import com.example.appbanhang.model.EventBus.OrderEvent;
 import com.example.appbanhang.model.Order;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -64,7 +68,14 @@ public class OrderManagerAdapter extends RecyclerView.Adapter<OrderManagerAdapte
         holder.recyclerViewOrder.setLayoutManager(layoutManager);
         holder.recyclerViewOrder.setAdapter(detailOrderAdapter);
         holder.recyclerViewOrder.setRecycledViewPool(viewPool);
-
+        holder.setListener(new ItemClickListener() {
+            @Override
+            public void onClick(View view, int pos, boolean isLongClick) {
+                if(isLongClick){
+                    EventBus.getDefault().postSticky(new OrderEvent(order));
+                }
+            }
+        });
     }
 
     @Override
@@ -72,14 +83,26 @@ public class OrderManagerAdapter extends RecyclerView.Adapter<OrderManagerAdapte
         return orderList.size();
     }
 
-    public class MyViewOrder extends  RecyclerView.ViewHolder {
+    public class MyViewOrder extends  RecyclerView.ViewHolder implements View.OnLongClickListener {
         TextView order, status_order;
         RecyclerView recyclerViewOrder;
+        ItemClickListener listener;
         public MyViewOrder(@NonNull View itemView) {
             super(itemView);
             order = itemView.findViewById(R.id.id_order);
             recyclerViewOrder = itemView.findViewById(R.id.recycleview_order);
             status_order = itemView.findViewById(R.id.status_order);
+            itemView.setOnLongClickListener(this);
+        }
+
+        public void setListener(ItemClickListener listener) {
+            this.listener = listener;
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            listener.onClick(v,getAdapterPosition(), true);
+            return false;
         }
     }
 }

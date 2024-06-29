@@ -15,11 +15,16 @@ import java.io.IOException;
 public class UpdateStatusController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/html; charset=UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+
         String idOrder = req.getParameter("idOrder");
         String status = req.getParameter("status");
         OrderDAO orderDAO = new OrderDAO();
         Gson gson = new Gson();
         JsonObject jsonResponse = new JsonObject();
+        System.out.println("new status: " + status);
 
         if(orderDAO.updateStatus(Integer.parseInt(idOrder), status)){
             jsonResponse.addProperty("success", true);
