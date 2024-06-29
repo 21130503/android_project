@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -17,17 +18,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-<<<<<<< HEAD
             android:name=".activity.AddProductActivity"
             android:exported="false" />
-=======
+        <activity
             android:name=".activity.TypeProductActivity"
             android:exported="false"
             android:theme="@style/Theme.AppBanHang" />
         <activity
             android:name=".activity.SplashscreenActivity"
            android:exported="false" />
->>>>>>> main
         <activity
             android:name=".activity.OTPActivity"
             android:exported="false" />
@@ -37,31 +36,13 @@
         <activity
             android:name=".activity.ResetPassActivity"
             android:exported="false" />
-<<<<<<< HEAD
-        <!--        <activity-->
-        <!--            android:name=".ResetPassActivity"-->
-        <!--            android:exported="false" />
-                    android:name=".activity.CheckoutActivity"-->
-=======
-<<<<<<< HEAD
-
-=======
-<!--        <activity-->
-<!--            android:name=".ResetPassActivity"-->
-<!--            android:exported="false" />-->
         <activity
             android:name=".activity.CheckoutActivity"
             android:exported="false" />
->>>>>>> main
->>>>>>> main
         <activity
             android:name=".activity.ManagerActivity"
             android:exported="false" />
-        <activity
-            android:name=".activity.SplashscreenActivity"
-            android:exported="false">
 
-        </activity>
         <activity
             android:name=".activity.SearchActivity"
             android:exported="false" />
@@ -70,16 +51,12 @@
             android:exported="false" />
         <activity
             android:name=".activity.LoginActivity"
-<<<<<<< HEAD
-            android:exported="false">
-=======
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
->>>>>>> main
         </activity>
         <activity
             android:name=".activity.RegisterActivity"

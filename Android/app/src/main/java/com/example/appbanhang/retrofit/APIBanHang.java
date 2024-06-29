@@ -41,7 +41,8 @@ public interface APIBanHang {
             @Field("email") String email,
             @Field("username") String username,
             @Field("password") String password,
-            @Field("phoneNumber") String phoneNumber
+            @Field("phoneNumber") String phoneNumber,
+            @Field("uid") String uid
     );
 
     @POST("login")
@@ -81,20 +82,11 @@ public interface APIBanHang {
     Observable<ProductModel> getSearch(
             @Query("key") String key
     );
-<<<<<<< HEAD
     @POST("delete")
     Observable<MessageModel> deleteProduct(
             @Field("id") int id
     );
-    @POST("insert")
-    @FormUrlEncoded
-    Observable<MessageModel> isertProduct(
-            @Field("nameProduct") String nameProduct,
-            @Field("price") String price,
-            @Field("img") String img,
-            @Field("description") String description,
-            @Field("type") int type
-    );
+  
     @POST("edit")
     @FormUrlEncoded
     Observable<MessageModel> editProduct(
@@ -105,10 +97,22 @@ public interface APIBanHang {
             @Field("type") int type,
             @Field("id") int id
     );
-
-=======
+    @POST("create-order")
+    @FormUrlEncoded
+    Observable<TypeProductModel> addProduct(
+            @Field("name") String name,
+            @Field("price") String price,
+            @Field("image") String image,
+            @Field("description") String description,
+            @Field("type") String type
+    );
+    @POST("update-token")
+    @FormUrlEncoded
+    Observable<TypeProductModel> updateToken(
+            @Field("idUser") String idUser,
+            @Field("token") String token
+            );
 
     @POST("typeProduct")
     Observable<TypeProductModel> addTypeProduct(@Body TypeProduct typeProduct);
->>>>>>> main
 }

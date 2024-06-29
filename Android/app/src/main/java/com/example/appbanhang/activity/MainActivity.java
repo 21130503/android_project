@@ -2,11 +2,11 @@ package com.example.appbanhang.activity;
 
 import android.content.Context;
 import android.content.Intent;
-
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.telecom.Call;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 import android.widget.ViewFlipper;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -42,7 +43,10 @@ import com.example.appbanhang.retrofit.APIBanHang;
 import com.example.appbanhang.retrofit.RetrofitClient;
 import com.example.appbanhang.retrofit.TypeProductModel;
 import com.example.appbanhang.utils.Utils;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.util.ArrayList;
@@ -80,9 +84,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         apiBanHang = RetrofitClient.getInstance(Utils.BASR_URL).create(APIBanHang.class);
         Mapping(); //ánh xạ
+        getToken();
         ActionBar();
         ActionViewFlipper();
-
+        getToken();
         Paper.init(this);
         if(Paper.book().read("user") !=null){
             User user = Paper.book().read("user");
@@ -94,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
             getTypeProduct();
             getNewProduct();
             getEventClick();
-        } else {
+        }
+        else {
             Toast.makeText(getApplicationContext(), "Not connected internet", Toast.LENGTH_LONG).show();
 
         }
@@ -109,33 +115,57 @@ public class MainActivity extends AppCompatActivity {
         listViewManHinhChinh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
+                switch (position){
                     case 0:
                         Intent home = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(home);
                         break;
                     case 1:
                         Intent laptop = new Intent(getApplicationContext(), PhoneActivity.class);
-                        laptop.putExtra("type", 2);
+                        laptop.putExtra("type",2);
 
                         startActivity(laptop);
                         break;
                     case 2:
                         Intent phone = new Intent(getApplicationContext(), PhoneActivity.class);
-                        phone.putExtra("type", 1);
+                        phone.putExtra("type",1);
 
                         startActivity(phone);
                         break;
                     case 3:
-                        Intent logout = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(logout);
+                        Intent viewOrder = new Intent(getApplicationContext(), ViewOrder.class);
+                        startActivity(viewOrder);
+                        break;
+                    case 4:
+                        if(Utils.currentUser.isAdmin()){
+                            Intent viewManager = new Intent(getApplicationContext(), ManagerActivity.class);
+                            Toast.makeText(getApplicationContext(), "OK-admin", Toast.LENGTH_LONG).show();
+
+                            startActivity(viewManager);
+                            break;
+                        }else{
+                            Paper.book().delete("user");
+                            Paper.book().delete("email");
+                            Paper.book().delete("password");
+                            Intent login = new Intent(getApplicationContext(), LoginActivity.class);
+                            FirebaseAuth.getInstance().signOut();
+                            startActivity(login);
+                        }
+                    case 5:
+                        Paper.book().delete("user");
+                        Paper.book().delete("email");
+                        Paper.book().delete("password");
+                        Toast.makeText(getApplicationContext(), "OK-admin", Toast.LENGTH_LONG).show();
+
+                        Intent login = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(login);
                         break;
                 }
             }
         });
     }
 
-    public void getNewProduct() {
+    public void  getNewProduct(){
         compositeDisposable.add(apiBanHang.getNewProducts()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -148,25 +178,46 @@ public class MainActivity extends AppCompatActivity {
                             recyclerViewManHinhChinh.setAdapter(newProductAdapter);
                         },
                         throwable -> {
-                            Toast.makeText(getApplicationContext(), "Không kết nối được với server" + throwable.getMessage(), Toast.LENGTH_LONG).show();
-                            ;
+                            Toast.makeText(getApplicationContext(), "Không kết nối được với server"+ throwable.getMessage(),Toast.LENGTH_LONG).show(); ;
                         }
                 )
         );
     }
+    public  void getToken(){
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                if(!TextUtils.isEmpty(s)){
+                    compositeDisposable.add(apiBanHang.updateToken(String.valueOf(Utils.currentUser.getId()),s)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    typeProductModel -> {
 
-    public void getTypeProduct() {
+                                    },
+                                    throwable -> {
+                                        Log.d("log", throwable.getMessage());
+                                    }
+                            ));
+                }
+            }
+        });
+    }
+   public void getTypeProduct(){
         compositeDisposable.add(apiBanHang.getTypeProduct()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         typeProductModel -> {
-                            System.out.println(typeProductModel.getResults());
-                            if (typeProductModel.isSuccess()) {
+
+                            if(typeProductModel.isSuccess()){
                                 typeProducts = typeProductModel.getResults();
                                 if(Utils.currentUser.isAdmin()) {
                                     typeProducts.add(new TypeProduct(200, "Quản lí","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
+
                                 }
+                                typeProducts.add(new TypeProduct(300, "Đăng xuất","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
+//                                typeProducts.add()
                                 System.out.println(typeProducts.size());
                                 System.out.println(typeProducts);
                                 typeProductAdapter = new TypeProductAdapter(typeProducts, getApplicationContext());
@@ -176,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                 ));
-    }
+   }
 
 
     public void Mapping() {
@@ -193,17 +244,16 @@ public class MainActivity extends AppCompatActivity {
         bage = findViewById(R.id.menu_count);
         frameLayout = findViewById(R.id.frameCart_main);
         imageSearch = findViewById(R.id.image_search);
-
 //        Khởi tạo list
         typeProducts = new ArrayList<>();
 //        Khoi tạo list
         listNewProduct = new ArrayList<>();
 //        cart
-        if (Utils.carts == null) {
-            Utils.carts = new ArrayList<>();
-        } else {
+        if(Utils.carts == null){
+            Utils.carts =new ArrayList<>();
+        }else{
             int totalItem = 0;
-            for (int i = 0; i < Utils.carts.size(); i++) {
+            for (int i=0; i< Utils.carts.size();i++){
                 totalItem = totalItem + Utils.carts.get(i).getCount();
             }
             bage.setText(String.valueOf(totalItem));
@@ -229,24 +279,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         int totalItem = 0;
-        for (int i = 0; i < Utils.carts.size(); i++) {
+        for (int i=0; i< Utils.carts.size();i++){
             totalItem = totalItem + Utils.carts.get(i).getCount();
         }
         bage.setText(String.valueOf(totalItem));
     }
 
     // Check connect internet
-    public boolean isConnected(Context context) {
+    public boolean isConnected(Context context){
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
         NetworkInfo wifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         NetworkInfo mobile = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        if ((wifi != null && wifi.isConnected()) || (mobile != null && mobile.isConnected())) {
-            return true;
+        if((wifi !=null && wifi.isConnected()) || (mobile !=null && mobile.isConnected())){
+            return  true;
         }
-        return false;
+        return  false;
 
     }
-
     public void ActionBar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -278,12 +327,6 @@ public class MainActivity extends AppCompatActivity {
         Animation slide_out = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_out_right);
         viewFlipper.setInAnimation(slide_in);
         viewFlipper.setOutAnimation(slide_out);
-    }
-
-    //Điều hướng tới Tạo loại sản phẩm mới
-    public void goToTypeProductActivity(View view) {
-        Intent intent = new Intent(MainActivity.this, TypeProductActivity.class);
-        startActivity(intent);
     }
 
     @Override
