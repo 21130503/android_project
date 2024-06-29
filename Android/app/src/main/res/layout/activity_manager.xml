@@ -15,6 +15,7 @@
         android:layout_height="?actionBarSize">
     </androidx.appcompat.widget.Toolbar>
     <LinearLayout
+        android:gravity="center"
         android:id="@+id/line_1"
         android:padding="5dp"
         android:orientation="horizontal"
@@ -82,6 +83,7 @@
         </soup.neumorphism.NeumorphCardView>
     </LinearLayout>
     <LinearLayout
+        android:gravity="center"
         android:id="@+id/line_2"
         android:padding="5dp"
         android:orientation="horizontal"
