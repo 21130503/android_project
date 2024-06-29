@@ -67,13 +67,11 @@ public class DetailActivity extends AppCompatActivity {
             for(int i= 0 ; i< Utils.carts.size(); i++){
                 if(Utils.carts.get(i).getIdProduct() == product.getId()){
                     Utils.carts.get(i).setCount(count + Utils.carts.get(i).getCount());
-                    long totalPrice = Long.parseLong(String.valueOf(product.getPrice())) * Utils.carts.get(i).getCount();
-                    Utils.carts.get(i).setPriceProduct(totalPrice);
                     flag = true;
                 }
             }
             if(flag == false){
-                long price = Long.parseLong(String.valueOf(product.getPrice())) * count;
+                long price = Long.parseLong(String.valueOf(product.getPrice()));
                 Cart cart = new Cart();
                 cart.setPriceProduct(price);
                 cart.setCount(count);
@@ -86,7 +84,7 @@ public class DetailActivity extends AppCompatActivity {
         }
         else{
             int count = Integer.parseInt(spinner.getSelectedItem().toString());
-            long price =Long.parseLong(String.valueOf(product.getPrice())) * count;
+            long price =Long.parseLong(String.valueOf(product.getPrice())) ;
             Cart cart = new Cart();
             cart.setCount(count);
             cart.setIdProduct(product.getId());
