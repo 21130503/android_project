@@ -84,4 +84,6 @@ public interface APIBanHang {
             @Field("idOrder") int idOrder,
             @Field("status") String new_status
     );
+    @GET("product-statistics")
+    Observable<NewProductModel> getStatistics();
 }

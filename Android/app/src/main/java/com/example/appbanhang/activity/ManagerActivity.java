@@ -3,6 +3,7 @@ package com.example.appbanhang.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +17,7 @@ import com.example.appbanhang.R;
 import soup.neumorphism.NeumorphCardView;
 
 public class ManagerActivity extends AppCompatActivity {
-    NeumorphCardView addProduct, updateProduct, deleteProduct, viewOrder;
+    NeumorphCardView addProduct, updateProduct, deleteProduct, viewOrder, statistics;
     Toolbar toolbarManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,14 @@ public class ManagerActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        statistics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
+                startActivity(intent);
+
+            }
+        });
     }
 
     private void Mapping() {
@@ -66,6 +75,7 @@ public class ManagerActivity extends AppCompatActivity {
         deleteProduct = findViewById(R.id.delete_product);
         toolbarManager = findViewById(R.id.toolbar_manager);
         viewOrder = findViewById(R.id.view_order);
+        statistics = findViewById(R.id.statistic);
 
     }
 }

@@ -85,6 +85,9 @@ dependencies {
     //Volley-send notification
     implementation ("com.android.volley:volley:1.2.1")
 
+//    Chart
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
 
 
 

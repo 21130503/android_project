@@ -50,6 +50,10 @@ public class CartActivity extends AppCompatActivity {
         });
         Mapping();
         initControl();
+
+        if(Utils.purchases != null){
+            Utils.purchases.clear();
+        }
         caluclateTotalPrice();
     }
 
