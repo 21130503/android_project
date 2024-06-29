@@ -189,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String s) {
                 if(!TextUtils.isEmpty(s)){
+                    Utils.token = s;
                     compositeDisposable.add(apiBanHang.updateToken(String.valueOf(Utils.currentUser.getId()),s)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())

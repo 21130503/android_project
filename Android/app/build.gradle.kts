@@ -82,6 +82,10 @@ dependencies {
 
 //
     implementation ("com.github.fornewid:neumorphism:0.3.0")
+    //Volley-send notification
+    implementation ("com.android.volley:volley:1.2.1")
+
+
 
 
 }

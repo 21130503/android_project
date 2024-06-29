@@ -11,6 +11,7 @@ public class Utils {
     public static List<Cart> carts ;
     public static  List<Cart> purchases = new ArrayList<>();
     public static User currentUser = new User();
+    public static String token ;
 
 //    public static  serviceAccountJson ={
 //        "type": "service_account",

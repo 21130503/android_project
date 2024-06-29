@@ -115,4 +115,24 @@ public class ProductDAO {
         }
         return  products;
     }
+    public  List<Product> productStatistics(){
+        Connection connection = null;
+        List<Product> products= new ArrayList<>();
+        try {
+             connection = Connect.getConnection();
+             String sql = "Select p.id, p.name, count(ct.quantity) as total from ct_order ct  join product p on ct.idProduct = p.id group by p.id";
+             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery();
+             while (resultSet.next()) {
+                 Product product = new Product();
+                 product.setId(resultSet.getInt(1));
+                 product.setName(resultSet.getString(2));
+                 product.setCount(resultSet.getInt(3));
+                 products.add(product);
+             }
+             return  products;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
