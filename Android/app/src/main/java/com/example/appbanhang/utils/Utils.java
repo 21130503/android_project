@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Utils {
 
-     public  static  final String BASR_URL="http://192.168.1.2:8080/server_war/"; //quyen
+     public  static  final String BASR_URL="http://192.168.1.137:8080/server_war/"; //quyen
     public static List<Cart> carts;
 
 //     public  static  final String BASR_URL="http://192.168.43.233:8080/server_war/"; //nguyensang
