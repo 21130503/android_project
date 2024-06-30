@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -89,7 +91,7 @@ public class AddProductActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String str_ten = binding.name.getText().toString().trim();
                 String str_gia = binding.price.getText().toString().trim();
-                String str_hinhAnh = binding.showImage.toString().trim();
+                String str_hinhAnh = binding.imageName.getText().toString().trim();
                 String str_moTa = binding.description.getText().toString().trim();
 
                 if(TextUtils.isEmpty(str_ten) || TextUtils.isEmpty(str_gia) ||
@@ -97,7 +99,7 @@ public class AddProductActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Vui lòng nhập đủ thông tin", Toast.LENGTH_LONG).show();
 
                 }else {
-                    compositeDisposable.add(apiBanHang.addProduct(str_ten, str_gia, str_hinhAnh, str_moTa, (type-1))
+                    compositeDisposable.add(apiBanHang.addProduct(str_ten, str_gia, str_hinhAnh, str_moTa, (type))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
@@ -120,6 +122,7 @@ public class AddProductActivity extends AppCompatActivity {
             }
         });
 
+
         binding.upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +131,14 @@ public class AddProductActivity extends AppCompatActivity {
                         .compress(1024)			//Final image size will be less than 1 MB(Optional)
                         .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
                         .start(MY_REQUEST_CODE);
+            }
+        });
+
+        binding.back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -147,6 +158,20 @@ public class AddProductActivity extends AppCompatActivity {
         mediaPath = data.getDataString();
         uploadFile();
         Log.d(TAG, "onActivityResult: "+ mediaPath);
+    }
+    private String getPath(Uri uri){
+        String result;
+        Cursor cursor = getContentResolver().query(uri, null, null, null);
+        if (cursor == null){
+            result = uri.getPath();
+        }else {
+            cursor.moveToFirst();
+            int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(index);
+            cursor.close();
+        }
+        return result;
+
     }
     public void getTypeProduct(){
         compositeDisposable.add(apiBanHang.getTypeProduct()
@@ -189,20 +214,21 @@ public class AddProductActivity extends AppCompatActivity {
 
 
     private void uploadFile() {
-        File file = new File(mediaPath);
+        Uri uri = Uri.parse(mediaPath);
+        File file = new File(getPath(uri));
         // Parsing any Media type file      
         RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
         MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
         RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
 
-        Call<ProductModel> call = (Call) apiBanHang.uploadFile(fileToUpload);
+        Call<ProductModel> call =  apiBanHang.uploadFile(fileToUpload);
         call.enqueue(new Callback<ProductModel>() {
             @Override
             public void onResponse(Call<ProductModel> call, retrofit2.Response<ProductModel> response) {
+                ProductModel serverResponse = response.body();
                 if (response.isSuccessful() && response.body() != null) {
-                    ProductModel serverResponse = response.body();
                     if (serverResponse.isSuccess()) {
-                        Toast.makeText(getApplicationContext(), serverResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        binding.imageName.setText(serverResponse.getName());
                     } else {
                         Toast.makeText(getApplicationContext(), serverResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }

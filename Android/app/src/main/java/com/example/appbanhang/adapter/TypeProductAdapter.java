@@ -7,10 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
 import com.example.appbanhang.model.TypeProduct;
+import com.example.appbanhang.utils.Utils;
 
 import java.util.List;
 
@@ -64,7 +66,14 @@ public class TypeProductAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         viewHolder.textNameProduct.setText(typeProductList.get(position).getName());
-        Glide.with(context).load(typeProductList.get(position).getImage()).into(viewHolder.imageProduct);
+//        Glide.with(context).load(typeProductList.get(position).getImage()).into(viewHolder.imageProduct);
+        if (typeProductList.get(position).getImage().contains("http")){
+            Glide.with(context).load(typeProductList.get(position).getImage()).into(viewHolder.imageProduct);
+
+        }else{
+            String img = Utils.BASR_URL+"uploads/"+typeProductList.get(position).getImage();
+            Glide.with(context).load(img).into(viewHolder.imageProduct);
+        }
         return convertView;
     }
 }

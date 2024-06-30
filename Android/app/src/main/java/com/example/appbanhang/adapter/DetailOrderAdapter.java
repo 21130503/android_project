@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
 import com.example.appbanhang.model.Product;
+import com.example.appbanhang.utils.Utils;
 
 import java.util.List;
 
@@ -42,7 +44,14 @@ public class DetailOrderAdapter extends RecyclerView.Adapter<DetailOrderAdapter.
         Product product = productList.get(position);
         holder.name_order_detail.setText(product.getName());
         holder.quantity_order_detail.setText("Số lượng: " +String.valueOf(product.getCount()));
-        Glide.with(context).load(product.getImage()).into(holder.image_order_detail);
+//        Glide.with(context).load(product.getImage()).into(holder.image_order_detail);
+        if (product.getImage().contains("http")){
+            Glide.with(context).load(product.getImage()).into(holder.image_order_detail);
+
+        }else{
+            String img = Utils.BASR_URL+"uploads/"+product.getImage();
+            Glide.with(context).load(img).into(holder.image_order_detail);
+        }
 
     }
 

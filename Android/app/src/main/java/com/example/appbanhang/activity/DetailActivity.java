@@ -107,7 +107,15 @@ public class DetailActivity extends AppCompatActivity {
          product = (Product) getIntent().getSerializableExtra("detail");
         nameProduct.setText(product.getName());
         descriptionProduct.setText(product.getDescription());
-        Glide.with(getApplicationContext()).load(product.getImage()).into(image);
+//        Glide.with(getApplicationContext()).load(product.getImage()).into(image);
+        if (product.getImage().contains("http")){
+
+            Glide.with(getApplicationContext()).load(product.getImage()).into(image);
+
+        }else{
+            String img = Utils.BASR_URL+"uploads/"+product.getImage();
+            Glide.with(getApplicationContext()).load(img).into(image);
+        }
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         priceProduct.setText("Giá "+ decimalFormat.format(product.getPrice())+ "VNĐ");
         Integer[] count = new Integer[]{1,2,3,4,5,6,7,8,9,10};
