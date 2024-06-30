@@ -80,7 +80,7 @@ public interface APIBanHang {
     );
     @GET("get-token")
     Observable<UserModel> getToken(
-            @Field("ísAdmin") String isAdmin
+            @Query("isAdmin") String isAdmin
 
     );
     @POST("update-status")

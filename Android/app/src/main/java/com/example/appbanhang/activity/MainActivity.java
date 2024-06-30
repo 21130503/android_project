@@ -221,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(
                         userModel -> {
                             Utils.ID_RECEIVER = String.valueOf(userModel.getResult().get(0).getId());
+                            System.out.println("System idAdmin: " +Utils.ID_RECEIVER);
                         }
                 ));
     }

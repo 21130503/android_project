@@ -13,6 +13,12 @@ public class Utils {
     public static User currentUser = new User();
     public static String token ;
     public static  String  ID_RECEIVER;
+    public static final  String SENDID = "idSend";
+    public static  final String RECEIVEDID = "idReceived";
+    public static  final String MESS = "message";
+    public static  final String PATH_CHAT = "chat";
+    public static  final String DATETIME = "dateTime";
+
 
 //    public static  serviceAccountJson ={
 //        "type": "service_account",
