@@ -56,13 +56,16 @@ public class CartAdapter  extends RecyclerView.Adapter<CartAdapter.MyViewHolder>
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
-                    System.out.println("position :" + position);
-                    System.out.println("Cart : " + cart);
-                    Utils.purchases.add(cart);
-                    System.out.println("Mang mua hang: " + Utils.purchases.size());
+                    Utils.carts.get(holder.getAdapterPosition()).setChecked(true);
+                    if(!Utils.purchases.contains(cart)){
+
+                        Utils.purchases.add(cart);
+                    }
                     EventBus.getDefault().postSticky(new CalcTotalEvent());
                 }
                 else {
+                    Utils.carts.get(holder.getAdapterPosition()).setChecked(false);
+
                     for (int i= 0 ; i<Utils.purchases.size(); i++) {
                         if(Utils.purchases.get(i).getIdProduct() == cart.getIdProduct()) {
                             Utils.purchases.remove(i);
@@ -73,6 +76,7 @@ public class CartAdapter  extends RecyclerView.Adapter<CartAdapter.MyViewHolder>
                 }
             }
         });
+        holder.checkBox.setChecked(cart.isChecked());
 
         holder.setListener(new IImageClickListener() {
             @Override
@@ -93,6 +97,7 @@ public class CartAdapter  extends RecyclerView.Adapter<CartAdapter.MyViewHolder>
                         builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                Utils.purchases.remove(cart);
                                 carts.remove(pos);
                                 notifyDataSetChanged();
                                 EventBus.getDefault().postSticky(new CalcTotalEvent());

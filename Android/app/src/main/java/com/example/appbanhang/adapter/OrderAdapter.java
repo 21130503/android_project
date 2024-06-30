@@ -53,6 +53,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyViewOrder>
         Order order = orderList.get(position);
         holder.order.setText("Đơn hàng: " + String.valueOf(order.getId()));
         holder.status_order.setText("Trạng thái đơn: " + order.getStatus());
+        holder.address_order.setText("Địa chỉ: " + order.getAddress());
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 holder.recyclerViewOrder.getContext(),
                 LinearLayoutManager.VERTICAL,
@@ -73,13 +74,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyViewOrder>
     }
 
     public class MyViewOrder extends  RecyclerView.ViewHolder {
-        TextView order, status_order;
+        TextView order, status_order, address_order;
+
         RecyclerView recyclerViewOrder;
         public MyViewOrder(@NonNull View itemView) {
             super(itemView);
             order = itemView.findViewById(R.id.id_order);
             recyclerViewOrder = itemView.findViewById(R.id.recycleview_order);
             status_order = itemView.findViewById(R.id.status_order);
+            address_order = itemView.findViewById(R.id.address_order);
         }
     }
 }

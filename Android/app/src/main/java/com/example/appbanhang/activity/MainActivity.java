@@ -271,6 +271,9 @@ public class MainActivity extends AppCompatActivity {
         typeProducts = new ArrayList<>();
 //        Khoi tạo list
         listNewProduct = new ArrayList<>();
+        if(Paper.book().read("carts") !=null){
+            Utils.carts = Paper.book().read("carts");
+        }
 //        cart
         if(Utils.carts == null){
             Utils.carts =new ArrayList<>();

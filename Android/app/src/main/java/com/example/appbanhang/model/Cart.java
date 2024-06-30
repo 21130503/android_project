@@ -6,6 +6,15 @@ public class Cart {
     private long priceProduct;
     private String imgProduct;
     private int count;
+    private boolean checked;
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
 
     public Cart() {
     }
