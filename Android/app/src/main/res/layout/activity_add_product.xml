@@ -21,8 +21,8 @@
 
     <LinearLayout
         android:id="@+id/linearLayout3"
-        android:layout_width="380dp"
-        android:layout_height="324dp"
+        android:layout_width="378dp"
+        android:layout_height="302dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -133,11 +133,11 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/chooseImage"
+        android:id="@+id/upload"
         android:layout_width="182dp"
         android:layout_height="51dp"
         android:background="@drawable/button_background"
-        android:text="Choose Image"
+        android:text="Upload Image"
         android:textColor="@color/black"
         android:textSize="20dp"
         app:backgroundTint="@null"
@@ -146,24 +146,25 @@
         app:layout_constraintHorizontal_bias="0.069"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-        app:layout_constraintVertical_bias="0.182" />
+        app:layout_constraintVertical_bias="0.229" />
 
     <ImageView
         android:id="@+id/showImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="115dp"
+        android:layout_height="97dp"
         android:src="@mipmap/ic_launcher"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toEndOf="@+id/chooseImage"
+        app:layout_constraintHorizontal_bias="0.602"
+        app:layout_constraintStart_toEndOf="@+id/upload"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-        app:layout_constraintVertical_bias="0.147" />
+        app:layout_constraintVertical_bias="0.18" />
 
     <Button
         android:id="@+id/add"
         android:layout_width="150dp"
         android:layout_height="50dp"
+        android:layout_marginBottom="96dp"
         android:background="@drawable/button_background"
         android:text="Thêm vào"
         android:textColor="@color/black"
@@ -173,8 +174,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.061"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chooseImage"
-        app:layout_constraintVertical_bias="0.333" />
+        app:layout_constraintTop_toBottomOf="@+id/upload"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/back"
@@ -187,8 +188,9 @@
         app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.831"
+        app:layout_constraintHorizontal_bias="0.821"
         app:layout_constraintStart_toEndOf="@+id/add"
-        app:layout_constraintTop_toBottomOf="@+id/chooseImage"
-        app:layout_constraintVertical_bias="0.333" />
+        app:layout_constraintTop_toBottomOf="@+id/upload"
+        app:layout_constraintVertical_bias="0.358" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

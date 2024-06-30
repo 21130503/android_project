@@ -18,6 +18,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -37,13 +38,23 @@ import com.example.appbanhang.model.TypeProduct;
 import com.example.appbanhang.retrofit.APIBanHang;
 import com.example.appbanhang.retrofit.RetrofitClient;
 import com.example.appbanhang.utils.Utils;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import retrofit2.Call;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Callback;
 
 public class AddProductActivity extends AppCompatActivity {
     private static final String TAG = "AddProductActivity";
@@ -55,6 +66,7 @@ public class AddProductActivity extends AppCompatActivity {
     List<TypeProduct> typeProducts;
     int type = 0;
     private ActivityAddProductBinding binding;
+    String mediaPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,8 +120,34 @@ public class AddProductActivity extends AppCompatActivity {
             }
         });
 
-    }
+        binding.upload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImagePicker.with(AddProductActivity.this)
+                        .crop()	    			//Crop image(Optional), Check Customization for more option
+                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
+                        .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                        .start(MY_REQUEST_CODE);
+            }
+        });
 
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == MY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            Uri uri = data.getData();
+            binding.showImage.setImageURI(uri); // Gắn ảnh vào ImageView
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
+        }
+        mediaPath = data.getDataString();
+        uploadFile();
+        Log.d(TAG, "onActivityResult: "+ mediaPath);
+    }
     public void getTypeProduct(){
         compositeDisposable.add(apiBanHang.getTypeProduct()
                 .subscribeOn(Schedulers.io())
@@ -149,6 +187,38 @@ public class AddProductActivity extends AppCompatActivity {
                 ));
     }
 
+
+    private void uploadFile() {
+        File file = new File(mediaPath);
+        // Parsing any Media type file      
+        RequestBody requestBody = RequestBody.create(MediaType.parse("*/*"), file);
+        MultipartBody.Part fileToUpload = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+        RequestBody filename = RequestBody.create(MediaType.parse("text/plain"), file.getName());
+
+        Call<ProductModel> call = (Call) apiBanHang.uploadFile(fileToUpload);
+        call.enqueue(new Callback<ProductModel>() {
+            @Override
+            public void onResponse(Call<ProductModel> call, retrofit2.Response<ProductModel> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ProductModel serverResponse = response.body();
+                    if (serverResponse.isSuccess()) {
+                        Toast.makeText(getApplicationContext(), serverResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), serverResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.e("UploadFile", "Response unsuccessful or body null");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProductModel> call, Throwable t) {
+                Log.d(TAG, t.getMessage());
+            }
+
+
+        });
+    }
 //    private ActivityResultLauncher<Intent> mActivityResultLauncher = registerForActivityResult(
 //            new ActivityResultContracts.StartActivityForResult(),
 //            new ActivityResultCallback<ActivityResult>() {

@@ -32,6 +32,8 @@ android {
 }
 
 dependencies {
+    // image picker
+    implementation (libs.imagepicker)
 
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -85,8 +87,10 @@ dependencies {
 //
     implementation ("com.github.fornewid:neumorphism:0.3.0")
 
-    // image picker
-    implementation ("com.github.dhaval2404:imagepicker:2.1")
+    implementation ("commons-fileupload:commons-fileupload:1.4")
+    implementation ("commons-io:commons-io:2.11.0")
+
+
 
 }
 

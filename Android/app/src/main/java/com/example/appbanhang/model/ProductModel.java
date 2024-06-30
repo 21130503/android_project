@@ -5,6 +5,8 @@ import java.util.List;
 public class ProductModel {
     private  boolean  success;
     private  String message;
+
+    private String imageName;
     List<Product> results;
 
     public boolean isSuccess() {
