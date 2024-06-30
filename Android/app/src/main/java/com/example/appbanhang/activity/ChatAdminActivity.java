@@ -35,13 +35,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatAdminActivity extends AppCompatActivity {
+
     RecyclerView recyclerView;
     ImageView imageSend;
     EditText editTextSend;
     FirebaseFirestore db;
     ChatAdapter adapter;
     List<ChatMessage> list;
+    String idUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +56,7 @@ public class ChatActivity extends AppCompatActivity {
         });
         Mapping();
         control();
-
+        idUser = String.valueOf(getIntent().getIntExtra("id", 0));
         listenMess();
         insertUser();
     }
@@ -97,7 +99,7 @@ public class ChatActivity extends AppCompatActivity {
         }else{
             HashMap<String, Object> message = new HashMap<>();
             message.put(Utils.SENDID, String.valueOf(Utils.currentUser.getId()));
-            message.put(Utils.RECEIVEDID, Utils.ID_RECEIVER);
+            message.put(Utils.RECEIVEDID, idUser);
             message.put(Utils.MESS, str_mess);
             message.put(Utils.DATETIME, new Date());
             db.collection(Utils.PATH_CHAT).add(message);
@@ -107,11 +109,11 @@ public class ChatActivity extends AppCompatActivity {
     private  void  listenMess(){
         db.collection(Utils.PATH_CHAT)
                 .whereEqualTo(Utils.SENDID, String.valueOf(Utils.currentUser.getId()))
-                .whereEqualTo(Utils.RECEIVEDID, Utils.ID_RECEIVER)
+                .whereEqualTo(Utils.RECEIVEDID, idUser)
                 .addSnapshotListener(eventListener);
 
         db.collection(Utils.PATH_CHAT)
-                .whereEqualTo(Utils.SENDID, Utils.ID_RECEIVER)
+                .whereEqualTo(Utils.SENDID, idUser)
                 .whereEqualTo(Utils.RECEIVEDID, String.valueOf(Utils.currentUser.getId()))
                 .addSnapshotListener(eventListener);
     }
@@ -131,7 +133,7 @@ public class ChatActivity extends AppCompatActivity {
                     chatMessage.dateTime = format_date(documentChange.getDocument().getDate(Utils.DATETIME));
                     list.add(chatMessage);
 
-                    
+
                 }
             }
             Collections.sort(list, (obj1, obj2)-> obj1.dateObj.compareTo(obj2.dateObj));
