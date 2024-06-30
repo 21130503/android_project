@@ -15,17 +15,29 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appbanhang.R;
+import com.example.appbanhang.adapter.ChatAdapter;
+import com.example.appbanhang.model.ChatMessage;
 import com.example.appbanhang.utils.Utils;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 public class ChatActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     ImageView imageSend;
     EditText editTextSend;
     FirebaseFirestore db;
+    ChatAdapter adapter;
+    List<ChatMessage> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +50,8 @@ public class ChatActivity extends AppCompatActivity {
         });
         Mapping();
         control();
+
+        listenMess();
     }
 
     private void control() {
@@ -63,8 +77,51 @@ public class ChatActivity extends AppCompatActivity {
             editTextSend.setText("");
         }
     }
+    private  void  listenMess(){
+        db.collection(Utils.PATH_CHAT)
+                .whereEqualTo(Utils.SENDID, String.valueOf(Utils.currentUser.getId()))
+                .whereEqualTo(Utils.RECEIVEDID, Utils.ID_RECEIVER)
+                .addSnapshotListener(eventListener);
+
+        db.collection(Utils.PATH_CHAT)
+                .whereEqualTo(Utils.SENDID, Utils.ID_RECEIVER)
+                .whereEqualTo(Utils.RECEIVEDID, String.valueOf(Utils.currentUser.getId()))
+                .addSnapshotListener(eventListener);
+    }
+    public final EventListener<QuerySnapshot> eventListener = (value, error)->{
+        if(error !=null) {
+            return ;
+        }
+        if(value !=null){
+            int count = list.size();
+            for (DocumentChange documentChange : value.getDocumentChanges()){
+                if(documentChange.getType() == DocumentChange.Type.ADDED){
+                    ChatMessage chatMessage = new ChatMessage();
+                    chatMessage.sendId = documentChange.getDocument().getString(Utils.SENDID);
+                    chatMessage.receivedId = documentChange.getDocument().getString(Utils.RECEIVEDID);
+                    chatMessage.mess = documentChange.getDocument().getString(Utils.MESS);
+                    chatMessage.dateObj = documentChange.getDocument().getDate(Utils.DATETIME);
+                    chatMessage.dateTime = format_date(documentChange.getDocument().getDate(Utils.DATETIME));
+                    list.add(chatMessage);
+
+                    
+                }
+            }
+            Collections.sort(list, (obj1, obj2)-> obj1.dateObj.compareTo(obj2.dateObj));
+            if(count == 0){
+                adapter.notifyDataSetChanged();
+            }else{
+                adapter.notifyItemRangeInserted(list.size(), list.size());
+                recyclerView.smoothScrollToPosition(list.size()-1);
+            }
+        }
+    };
+    private  String format_date(Date date){
+        return  new SimpleDateFormat("MMMM dd, yyyy- hh:mm a", Locale.getDefault()).format(date);
+    }
 
     private void Mapping() {
+        list = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
 
         editTextSend = findViewById(R.id.content);
@@ -73,5 +130,9 @@ public class ChatActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
+
+//        set Adapeter
+        adapter = new ChatAdapter(getApplicationContext(), list,String.valueOf( Utils.currentUser.getId()));
+        recyclerView.setAdapter(adapter);
     }
 }
