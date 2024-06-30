@@ -175,4 +175,29 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
+    public User getAdmin(String isAdmin) {
+        Connection connection = null;
+        try{
+            connection = Connect
+                    .getConnection();
+            String sql = "select id, email, isAdmin, phoneNumber , username from user where isAdmin = ? ";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1,isAdmin);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setEmail(resultSet.getString("email"));
+                user.setName(resultSet.getString("username"));
+                user.setPhoneNumber(resultSet.getString("phoneNumber"));
+                user.setAdmin(resultSet.getBoolean("isAdmin"));
+                System.out.println(user);
+
+                return user;
+            }
+        }catch (SQLException e){
+            throw  new RuntimeException(e);
+        }
+        return  null;
+    }
 }

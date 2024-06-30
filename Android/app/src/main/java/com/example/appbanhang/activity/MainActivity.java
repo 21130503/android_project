@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     APIBanHang apiBanHang;
     NotificationBadge bage;
     FrameLayout frameLayout;
-    ImageView imageSearch;
+    ImageView imageSearch, imageChat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         ActionBar();
         ActionViewFlipper();
         getToken();
+        control();
         Paper.init(this);
         if(Paper.book().read("user") !=null){
             User user = Paper.book().read("user");
@@ -108,6 +109,16 @@ public class MainActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+    }
+
+    private void control() {
+        imageChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                startActivity(intent);
+            }
         });
     }
 
@@ -204,6 +215,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        compositeDisposable.add(apiBanHang.getToken("true")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        userModel -> {
+                            Utils.ID_RECEIVER = String.valueOf(userModel.getResult().get(0).getId());
+                        }
+                ));
     }
    public void getTypeProduct(){
         compositeDisposable.add(apiBanHang.getTypeProduct()
@@ -246,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
         bage = findViewById(R.id.menu_count);
         frameLayout = findViewById(R.id.frameCart_main);
         imageSearch = findViewById(R.id.image_search);
+        imageChat = findViewById(R.id.image_chat);
 //        Khởi tạo list
         typeProducts = new ArrayList<>();
 //        Khoi tạo list

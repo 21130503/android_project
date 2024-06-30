@@ -78,6 +78,11 @@ public interface APIBanHang {
             @Field("idUser") String idUser,
             @Field("token") String token
     );
+    @GET("get-token")
+    Observable<UserModel> getToken(
+            @Field("ísAdmin") String isAdmin
+
+    );
     @POST("update-status")
     @FormUrlEncoded
     Observable<TypeProductModel> updateStatusOrder(
