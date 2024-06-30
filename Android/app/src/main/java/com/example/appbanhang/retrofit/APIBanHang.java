@@ -3,12 +3,15 @@ package com.example.appbanhang.retrofit;
 import com.example.appbanhang.model.NewProductModel;
 import com.example.appbanhang.model.OrderModel;
 import com.example.appbanhang.model.ProductModel;
+import com.example.appbanhang.model.TypeProduct;
 import com.example.appbanhang.model.UserModel;
 
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -48,8 +51,10 @@ public interface APIBanHang {
             @Field("email") String email,
             @Field("username") String username,
             @Field("password") String password,
-            @Field("phoneNumber") String phoneNumber
+            @Field("phoneNumber") String phoneNumber,
+            @Field("uid") String uid
     );
+
     @POST("login")
     @FormUrlEncoded
     Observable<UserModel> login(
@@ -91,4 +96,22 @@ public interface APIBanHang {
     Call<ProductModel> uploadFile(@Part MultipartBody.Part file);
 
 
+    @POST("create-order")
+    @FormUrlEncoded
+    Observable<TypeProductModel> addProduct(
+            @Field("name") String name,
+            @Field("price") String price,
+            @Field("image") String image,
+            @Field("description") String description,
+            @Field("type") String type
+    );
+    @POST("update-token")
+    @FormUrlEncoded
+    Observable<TypeProductModel> updateToken(
+            @Field("idUser") String idUser,
+            @Field("token") String token
+            );
+
+    @POST("typeProduct")
+    Observable<TypeProductModel> addTypeProduct(@Body TypeProduct typeProduct);
 }

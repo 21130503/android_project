@@ -8,6 +8,15 @@ public class User {
     private String name;
     private boolean isAdmin;
     private String phoneNumber;
+    String uid;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public User() {
 
