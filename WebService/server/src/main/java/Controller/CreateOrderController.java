@@ -26,6 +26,7 @@ public class CreateOrderController extends HttpServlet {
         Gson gson = new Gson();
         String message = null;
         boolean success = false;
+        System.out.println(cart);
         if(orderDAO.createOrder(idUser,address, totalPrice, cart)){
             success = true;
             message = "Thành công";

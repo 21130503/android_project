@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/statistics_Id"
+        android:title="Danh thu tháng"
+        app:showAsAction="collapseActionView"/>
+    <item
+        android:title="Thống kê bán chạy"
+        android:id="@+id/statisticTrend"
+        />
+</menu>

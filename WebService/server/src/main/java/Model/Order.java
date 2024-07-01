@@ -6,14 +6,24 @@ public class Order {
     private int id;
     private String address;
     private String phoneNumber;
-    private String total;
+    private long total;
 
     private String status;
     private List<Product> products;
+    private  int month;
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
 
     public int getId() {
         return id;
     }
+
 
     public void setId(int id) {
         this.id = id;
@@ -35,11 +45,11 @@ public class Order {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getTotal() {
+    public long getTotal() {
         return total;
     }
 
-    public void setTotal(String total) {
+    public void setTotal(long total) {
         this.total = total;
     }
 
@@ -58,4 +68,5 @@ public class Order {
     public void setProducts(List<Product> products) {
         this.products = products;
     }
+
 }

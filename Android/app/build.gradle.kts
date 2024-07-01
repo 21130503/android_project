@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -92,6 +93,13 @@ dependencies {
 
 //
     implementation ("com.github.fornewid:neumorphism:0.3.0")
+    //Volley-send notification
+    implementation ("com.android.volley:volley:1.2.1")
+
+//    Chart
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+
 
     implementation ("commons-fileupload:commons-fileupload:1.4")
     implementation ("commons-io:commons-io:2.11.0")

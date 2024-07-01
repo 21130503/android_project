@@ -18,6 +18,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.appbanhang.R;
+import com.example.appbanhang.model.Cart;
 import com.example.appbanhang.retrofit.APIBanHang;
 import com.example.appbanhang.retrofit.RetrofitClient;
 import com.example.appbanhang.utils.Utils;
@@ -25,6 +26,7 @@ import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
 
+import io.paperdb.Paper;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -88,7 +90,15 @@ public class CheckoutActivity extends AppCompatActivity {
 //                                            Utils.currentUser = orderModel.getResult().get(0);
                                             Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+
+                                            for (int i = 0; i < Utils.purchases.size(); i++) {
+                                                Cart cart = Utils.purchases.get(i);
+                                                if(Utils.purchases.contains(cart)){
+                                                    Utils.purchases.remove(cart);
+                                                }
+                                            }
                                             Utils.purchases.clear();
+                                            Paper.book().write("carts", Utils.carts);
                                             startActivity(intent);
                                             finish();
                                         } else {

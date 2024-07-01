@@ -104,6 +104,10 @@ public class SearchActivity extends AppCompatActivity {
                                 phoneAdapter = new PhoneAdapter(getApplicationContext(),productModel.getResults());
                                 recyclerView.setAdapter(phoneAdapter);
                             }
+                            else {
+                                Toast.makeText(getApplicationContext(), productModel.getMessage(), Toast.LENGTH_LONG).show();
+                                
+                            }
 
                         },
                         throwable -> {
