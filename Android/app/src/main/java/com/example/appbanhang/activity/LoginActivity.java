@@ -34,15 +34,14 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class LoginActivity extends AppCompatActivity {
-    TextView registertxt;
+    TextView registertxt, resetPass;
     Button btnLogin;
     EditText email, password;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
-    CompositeDisposable compositeDisposable = new CompositeDisposable();
-    APIBanHang apiBanHang;
-    boolean isLogin = false;
-
+        CompositeDisposable compositeDisposable = new CompositeDisposable();
+        APIBanHang apiBanHang;
+        boolean isLogin = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +70,14 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         });
+
+        resetPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ResetPassActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void login() {
@@ -86,15 +93,35 @@ public class LoginActivity extends AppCompatActivity {
             Paper.book().write("email", emailString);
             Paper.book().write("password", passwordString);
 
+            compositeDisposable.add(apiBanHang.login(emailString, passwordString)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    userModel -> {
+                                        if(userModel.isSuccess()){
+                                            Utils.currentUser = userModel.getResult().get(0);
+                                            Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    },
+                                    throwable -> {
+                                        // Log the error and show a Toast message
+                                        throwable.printStackTrace();
+                                        Toast.makeText(getApplicationContext(), "Đã có lỗi xảy ra android: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                            )
+            );
+            loginDelay(emailString, passwordString);
+
+
             // Kiểm tra nếu người dùng đã đăng nhập
-            firebaseUser = firebaseAuth.getCurrentUser();
             if (firebaseUser != null) {
-
-                    loginDelay(emailString, passwordString);
-
+                loginDelay(emailString, passwordString);
             } else {
-                Toast.makeText(getApplicationContext(), "Đang tiến hành đăng nhập...", Toast.LENGTH_SHORT).show();
-
                 // Thực hiện đăng nhập bằng Firebase Authentication
                 firebaseAuth.signInWithEmailAndPassword(emailString, passwordString)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -110,50 +137,56 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
             }
+
         }
     }
 
-    public void Mapping() {
+
+    public void Mapping(){
         Paper.init(this);
         apiBanHang = RetrofitClient.getInstance(Utils.BASR_URL).create(APIBanHang.class);
         registertxt = findViewById(R.id.register);
         btnLogin = findViewById(R.id.btn_login);
         email = findViewById(R.id.email_login);
         password = findViewById(R.id.password_login);
-        firebaseAuth = FirebaseAuth.getInstance();
 
-        // Paper
-        if (Paper.book().read("email") != null && Paper.book().read("password") != null) {
+        resetPass = findViewById(R.id.resetPass);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+
+//        Paper
+        if(Paper.book().read("email") !=null && Paper.book().read("password") !=null){
             email.setText(Paper.book().read("email"));
             password.setText(Paper.book().read("password"));
 
-            if (Paper.book().read("isLogin") != null) {
-                boolean flag = Paper.book().read("isLogin");
-                if (flag) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            loginDelay(Paper.book().read("email"), Paper.book().read("password"));
-                        }
-                    }, 1000);
-                }
-            }
+//            if(Paper.book().read("isLogin") != null){
+//                boolean flag =Paper.book().read("isLogin");
+//                if (flag){
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            loginDelay(Paper.book().read("email"),Paper.book().read("password"));
+//                        }
+//                    },1000);
+//                }
+//            }
         }
     }
 
-    private void loginDelay(String email, String password) {
-        System.out.println("email : " + email);
+    private void loginDelay(String email,String password) {
         compositeDisposable.add(apiBanHang.login(email, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         userModel -> {
-                            if (userModel.isSuccess()) {
+                            if(userModel.isSuccess()){
                                 isLogin = true;
                                 Paper.book().write("isLogin", isLogin);
 
                                 Utils.currentUser = userModel.getResult().get(0);
-                                Paper.book().write("user", Utils.currentUser);
+                                Paper.book().write("user",  Utils.currentUser);
                                 Toast.makeText(getApplicationContext(), "Thành công", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
@@ -175,7 +208,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (Utils.currentUser != null && Utils.currentUser.getEmail() != null) {
+        if(Utils.currentUser.getEmail() !=null){
             email.setText(Utils.currentUser.getEmail());
         }
     }

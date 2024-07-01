@@ -27,9 +27,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    viewBinding {
+        enable = true
+    }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
+    // image picker
+    implementation (libs.imagepicker)
 
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -44,6 +52,8 @@ dependencies {
 //    glider
 //    androidTestImplementation "com.github.bumptech.glide:glide:4.16.0"
     implementation("com.github.bumptech.glide:glide:4.16.0")
+//    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
     // Hilt Dependency Injection
     implementation("com.google.dagger:hilt-android:2.40.5")
@@ -89,6 +99,10 @@ dependencies {
 //    Chart
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
+
+
+    implementation ("commons-fileupload:commons-fileupload:1.4")
+    implementation ("commons-io:commons-io:2.11.0")
 
 
 

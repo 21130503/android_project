@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     APIBanHang apiBanHang;
     NotificationBadge bage;
     FrameLayout frameLayout;
-    ImageView imageSearch, imageChat;
+    ImageView imageSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         ActionBar();
         ActionViewFlipper();
         getToken();
-        control();
         Paper.init(this);
         if(Paper.book().read("user") !=null){
             User user = Paper.book().read("user");
@@ -109,16 +108,6 @@ public class MainActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
-        });
-    }
-
-    private void control() {
-        imageChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                startActivity(intent);
-            }
         });
     }
 
@@ -152,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
                         if(Utils.currentUser.isAdmin()){
                             Intent viewManager = new Intent(getApplicationContext(), ManagerActivity.class);
                             Toast.makeText(getApplicationContext(), "OK-admin", Toast.LENGTH_LONG).show();
+
                             startActivity(viewManager);
                             break;
                         }else{
@@ -161,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
                             Intent login = new Intent(getApplicationContext(), LoginActivity.class);
                             FirebaseAuth.getInstance().signOut();
                             startActivity(login);
-                            break;
                         }
                     case 5:
                         Paper.book().delete("user");
@@ -171,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
 
                         Intent login = new Intent(getApplicationContext(), LoginActivity.class);
                         startActivity(login);
-                        FirebaseAuth.getInstance().signOut();
                         break;
                 }
             }
@@ -201,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String s) {
                 if(!TextUtils.isEmpty(s)){
-                    Utils.token = s;
                     compositeDisposable.add(apiBanHang.updateToken(String.valueOf(Utils.currentUser.getId()),s)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
@@ -216,15 +203,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        compositeDisposable.add(apiBanHang.getToken("true")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        userModel -> {
-                            Utils.ID_RECEIVER = String.valueOf(userModel.getResult().get(0).getId());
-                            System.out.println("System idAdmin: " +Utils.ID_RECEIVER);
-                        }
-                ));
     }
    public void getTypeProduct(){
         compositeDisposable.add(apiBanHang.getTypeProduct()
@@ -239,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
                                     typeProducts.add(new TypeProduct(200, "Quản lí","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
 
                                 }
-                                typeProducts.add(new TypeProduct(300, "Đăng xuất","https://png.pngtree.com/png-vector/20190917/ourlarge/pngtree-logout-icon-vectors-png-image_1737872.jpg"));
+                                typeProducts.add(new TypeProduct(300, "Đăng xuất","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
 //                                typeProducts.add()
                                 System.out.println(typeProducts.size());
                                 System.out.println(typeProducts);
@@ -267,14 +245,10 @@ public class MainActivity extends AppCompatActivity {
         bage = findViewById(R.id.menu_count);
         frameLayout = findViewById(R.id.frameCart_main);
         imageSearch = findViewById(R.id.image_search);
-        imageChat = findViewById(R.id.image_chat);
 //        Khởi tạo list
         typeProducts = new ArrayList<>();
 //        Khoi tạo list
         listNewProduct = new ArrayList<>();
-        if(Paper.book().read("carts") !=null){
-            Utils.carts = Paper.book().read("carts");
-        }
 //        cart
         if(Utils.carts == null){
             Utils.carts =new ArrayList<>();

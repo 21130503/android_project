@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +18,7 @@ import com.example.appbanhang.Interface.ItemClickListener;
 import com.example.appbanhang.R;
 import com.example.appbanhang.activity.DetailActivity;
 import com.example.appbanhang.model.Product;
+import com.example.appbanhang.utils.Utils;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -53,7 +55,15 @@ public class PhoneAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
             myViewHolder.price.setText("Giá "+ decimalFormat.format(product.getPrice())+ "VNĐ");
             myViewHolder.description.setText(product.getDescription());
-            Glide.with(context).load(product.getImage()).into(myViewHolder.image);
+//            Glide.with(context).load(product.getImage()).into(myViewHolder.image);
+            if (product.getImage().contains("http")){
+
+                Glide.with(context).load(product.getImage()).into(myViewHolder.image);
+
+            }else{
+                String img = Utils.BASR_URL+"uploads/"+product.getImage();
+                Glide.with(context).load(img).into(myViewHolder.image);
+            }
             myViewHolder.setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int pos, boolean isLongClick) {

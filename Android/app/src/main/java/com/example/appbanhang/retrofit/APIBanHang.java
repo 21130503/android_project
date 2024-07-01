@@ -6,15 +6,19 @@ import com.example.appbanhang.model.ProductModel;
 import com.example.appbanhang.model.TypeProduct;
 import com.example.appbanhang.model.UserModel;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reactivex.rxjava3.core.Observable;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 public interface APIBanHang {
@@ -28,6 +32,19 @@ public interface APIBanHang {
             @Query("type") int type
     );
 
+    @GET("forgetPassword")
+    Observable<UserModel> validationOTP(
+            @Query("otp") int otp
+    );
+
+    @GET("get-order")
+    Observable<OrderModel> getViewOrder(
+            @Query("idUser") int idUser
+    );
+    @GET("search")
+    Observable<ProductModel> getSearch(
+            @Query("key") String key
+    );
     @POST("register")
     @FormUrlEncoded
     Observable<UserModel> register(
@@ -37,6 +54,7 @@ public interface APIBanHang {
             @Field("phoneNumber") String phoneNumber,
             @Field("uid") String uid
     );
+
     @POST("login")
     @FormUrlEncoded
     Observable<UserModel> login(
@@ -51,18 +69,33 @@ public interface APIBanHang {
             @Field("address") String address,
             @Field("carts") String cart
     );
-    @GET("get-order")
-    Observable<OrderModel> getViewOrder(
-            @Query("idUser") int idUser
+
+    @POST("forgetPassword")
+    @FormUrlEncoded
+    Observable<UserModel> resetPass(
+            @Field("email") String email
     );
-    @GET("get-order-status")
-    Observable<OrderModel> getViewOrderManager(
-            @Query("status") String status
+    @POST("newPassword")
+    @FormUrlEncoded
+    Observable<UserModel> newPassword(
+            @Field("email") String email,
+            @Field("password") String password
     );
-    @GET("search")
-    Observable<ProductModel> getSearch(
-            @Query("key") String key
+    @POST("addProduct")
+    @FormUrlEncoded
+    Observable<ProductModel> addProduct(
+            @Field("name") String name,
+            @Field("price") String price,
+            @Field("image") String image,
+            @Field("description") String description,
+            @Field("type") int type
     );
+
+    @Multipart
+    @POST("upload")
+    Call<ProductModel> uploadFile(@Part MultipartBody.Part file);
+
+
     @POST("create-order")
     @FormUrlEncoded
     Observable<TypeProductModel> addProduct(
@@ -77,20 +110,8 @@ public interface APIBanHang {
     Observable<TypeProductModel> updateToken(
             @Field("idUser") String idUser,
             @Field("token") String token
-    );
-    @GET("get-token")
-    Observable<UserModel> getToken(
-            @Query("isAdmin") String isAdmin
+            );
 
-    );
-    @POST("update-status")
-    @FormUrlEncoded
-    Observable<TypeProductModel> updateStatusOrder(
-            @Field("idOrder") int idOrder,
-            @Field("status") String new_status
-    );
-    @GET("product-statistics")
-    Observable<NewProductModel> getStatistics();
-    @GET("get-statistics-by-month")
-    Observable<OrderModel> getStatisticsByMonth();
+    @POST("typeProduct")
+    Observable<TypeProductModel> addTypeProduct(@Body TypeProduct typeProduct);
 }

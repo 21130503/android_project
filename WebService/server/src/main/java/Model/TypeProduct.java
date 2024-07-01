@@ -8,6 +8,11 @@ public class TypeProduct {
     public TypeProduct() {
     }
 
+    public TypeProduct(String name, String image) {
+        this.name = name;
+        this.image = image;
+    }
+
     public int getId() {
         return id;
     }

@@ -63,76 +63,87 @@ public class ProductDAO {
         }
         return list;
     }
-    public Product getProductById(int id) {
+
+    public boolean addProduct(String name, int price, String image, String description, int type){
         Connection connection = null;
-        Product product = new Product();
+        ProductDAO productDAO = new ProductDAO();
+        int maxProductId = productDAO.getIndex();
+        try {
+            connection = Connect.getConnection();
+            String query = "Insert into product values(?,?,?,?,?,?)";
+            PreparedStatement pr = connection.prepareStatement(query);
+            pr.setInt(1, maxProductId+1);
+            pr.setString(2, name);
+            pr.setInt(3, price);
+            pr.setString(4, image);
+            pr.setString(5, description);
+            pr.setInt(6, type);
+            int resultSet1 = pr.executeUpdate();
+            if (resultSet1 >= 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (SQLException e){
+            throw  new RuntimeException(e);
+        }
+    }
+    public int getIndex(){
+        Connection connection = null;
+        int maxId = 0;
         try{
             connection = Connect.getConnection();
-            String sql = "select id, price,image,description, name, type from product where id=?";
+            String query = "SELECT MAX(id) AS maxId FROM product";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()){
+                maxId = rs.getInt("maxId");
+            }
+            return maxId;
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int deleteProduct(int id) {
+        Connection connection = null;
+        int rowsDeleted;
+        try {
+            connection = Connect.getConnection();
+            String sql = "DELETE FROM product WHERE id=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()){
-                product.setId(resultSet.getInt("id"));
-                product.setPrice(resultSet.getInt("price"));
-                product.setType(resultSet.getInt("type"));
-                product.setName(resultSet.getString("name"));
-                product.setDescription(resultSet.getString("description"));
-                product.setImage(resultSet.getString("image"));
-            }
-
-
+            rowsDeleted = preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-//        System.out.println(product.toString());
-        return  product;
+        return rowsDeleted;
     }
-    public List<Product> searchProduct(String key) {
-        if(key== null || key.trim().isEmpty()){
-            return  Collections.emptyList();
-        }
+    public int editProduct(Product product) {
         Connection connection = null;
-        List<Product> products = new ArrayList<>();
-        try{
-            connection =Connect.getConnection();
-            String sql = "select id, price,image,description, name, type from product where name LIKE ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, "%"+key+"%");
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()){
-                Product product = new Product();
-                product.setId(resultSet.getInt("id"));
-                product.setPrice(resultSet.getInt("price"));
-                product.setType(resultSet.getInt("type"));
-                product.setName(resultSet.getString("name"));
-                product.setDescription(resultSet.getString("description"));
-                product.setImage(resultSet.getString("image"));
-                products.add(product);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return  products;
-    }
-    public  List<Product> productStatistics(){
-        Connection connection = null;
-        List<Product> products= new ArrayList<>();
         try {
-             connection = Connect.getConnection();
-             String sql = "Select p.id, p.name, count(ct.quantity) as total from ct_order ct  join product p on ct.idProduct = p.id group by p.id";
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery();
-             while (resultSet.next()) {
-                 Product product = new Product();
-                 product.setId(resultSet.getInt(1));
-                 product.setName(resultSet.getString(2));
-                 product.setCount(resultSet.getInt(3));
-                 products.add(product);
-             }
-             return  products;
+            connection = Connect.getConnection();
+            String sql = "UPDATE product SET name=?, price=?, description=?, image=?, type=? WHERE id=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, product.getName());
+            preparedStatement.setInt(2, product.getPrice());
+            preparedStatement.setString(3, product.getDescription());
+            preparedStatement.setString(4, product.getImage());
+            preparedStatement.setInt(5, product.getType());
+            preparedStatement.setInt(6, product.getId());
+            int rowsUpdated = preparedStatement.executeUpdate();
+            return rowsUpdated;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
+
 }

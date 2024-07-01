@@ -23,8 +23,8 @@ public class getOrderController extends HttpServlet {
         JsonObject jsonResponse = new JsonObject();
         jsonResponse.addProperty("success", true);
         jsonResponse.addProperty("message", "Thành công");
-        JsonArray productByType = gson.toJsonTree(orderDAO.getOrderByIdUser(idUser)).getAsJsonArray();
-        jsonResponse.add("results", productByType);
+//        JsonArray productByType = gson.toJsonTree(orderDAO.getOrderByIdUser(idUser)).getAsJsonArray();
+//        jsonResponse.add("results", productByType);
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(gson.toJson(jsonResponse));

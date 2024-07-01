@@ -7,16 +7,20 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
 import com.example.appbanhang.model.TypeProduct;
+import com.example.appbanhang.utils.Utils;
 
 import java.util.List;
 
+
 public class TypeProductAdapter extends BaseAdapter {
-    List<TypeProduct> typeProductList ;
+    List<TypeProduct> typeProductList;
     Context context;
+
     public TypeProductAdapter(List<TypeProduct> typeProductList, Context context) {
         this.typeProductList = typeProductList;
         this.context = context;
@@ -41,10 +45,12 @@ public class TypeProductAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return 0;
     }
-    public  class  ViewHolder{
+
+    public class ViewHolder {
         TextView textNameProduct;
         ImageView imageProduct;
     }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
@@ -52,17 +58,22 @@ public class TypeProductAdapter extends BaseAdapter {
         if(viewHolder == null){
             viewHolder = new ViewHolder();
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView  = layoutInflater.inflate(R.layout.item_product, null);
+            convertView = layoutInflater.inflate(R.layout.item_product, null);
             viewHolder.imageProduct = convertView.findViewById(R.id.item_image);
             viewHolder.textNameProduct = convertView.findViewById(R.id.item_name_product);
             convertView.setTag(viewHolder);
-        }
-        else{
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         viewHolder.textNameProduct.setText(typeProductList.get(position).getName());
-        Glide.with(context).load(typeProductList.get(position).getImage()).into(viewHolder.imageProduct);
+//        Glide.with(context).load(typeProductList.get(position).getImage()).into(viewHolder.imageProduct);
+        if (typeProductList.get(position).getImage().contains("http")){
+            Glide.with(context).load(typeProductList.get(position).getImage()).into(viewHolder.imageProduct);
 
+        }else{
+            String img = Utils.BASR_URL+"uploads/"+typeProductList.get(position).getImage();
+            Glide.with(context).load(img).into(viewHolder.imageProduct);
+        }
         return convertView;
     }
 }

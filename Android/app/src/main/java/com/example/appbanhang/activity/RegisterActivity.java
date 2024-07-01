@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -26,6 +27,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.w3c.dom.Text;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -33,6 +36,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class RegisterActivity extends AppCompatActivity {
     EditText email, password, confirmPassword, phoneNumber, username ;
     Button registerBtn;
+    TextView loginBtn;
     APIBanHang apiBanHang;
     FirebaseAuth firebaseAuth;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -51,12 +55,20 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void initControl() {
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 register();
             }
         });
+
     }
 
     private void register() {
@@ -136,6 +148,7 @@ public class RegisterActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         phoneNumber = findViewById(R.id.phoneNumber);
         apiBanHang = RetrofitClient.getInstance(Utils.BASR_URL).create(APIBanHang.class);
+        loginBtn = findViewById(R.id.login);
     }
 
     @Override

@@ -5,6 +5,14 @@ public class TypeProduct {
     String name;
     String image;
 
+    public TypeProduct() {
+    }
+
+    public TypeProduct(String name, String image) {
+        this.name = name;
+        this.image = image;
+    }
+
     public TypeProduct(int id, String name, String image) {
         this.id = id;
         this.name = name;
