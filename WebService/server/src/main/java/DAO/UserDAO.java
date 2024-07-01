@@ -117,7 +117,7 @@ public class UserDAO {
         Connection connection = null;
         try {
             connection = Connect.getConnection();
-            String sql = "select id, email, username, isAdmin, phoneNumber from user where email = ? AND password = ?";
+            String sql = "select id, email, username, isAdmin, phoneNumber  from user where email=? AND password=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, password);
@@ -133,8 +133,6 @@ public class UserDAO {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            Connect.closeConnection(connection);
         }
         return null;
     }
@@ -147,14 +145,13 @@ public class UserDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);
             preparedStatement.setString(2, password);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet;
+            resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 return true;
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            Connect.closeConnection(connection);
         }
         return false;
     }

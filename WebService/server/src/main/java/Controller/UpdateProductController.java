@@ -12,33 +12,37 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/editProduct")
-public class EditProductController extends HttpServlet {
-
+@WebServlet("/updateProduct")
+public class UpdateProductController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
         Gson gson = new Gson();
         Product product = gson.fromJson(req.getReader(), Product.class);
-        ProductDAO dao = new ProductDAO();
         JsonObject jsonResponse = new JsonObject();
+        ProductDAO productDAO = new ProductDAO();
 
+        boolean status;
+        String mess;
+        int rowsUpdated = productDAO.updateProduct(product);
         try {
-            int rowsUpdated = dao.editProduct(product);
-
             if (rowsUpdated > 0) {
-                jsonResponse.addProperty("success", true);
-                jsonResponse.addProperty("message", "Cập nhật sản phẩm thành công");
+                status = true;
+                mess = "Thành công";
             } else {
-                jsonResponse.addProperty("success", false);
-                jsonResponse.addProperty("message", "Không tìm thấy sản phẩm để cập nhật");
+                status = false;
+                mess = "Thất bại";
             }
         } catch (Exception e) {
-            jsonResponse.addProperty("success", false);
-            jsonResponse.addProperty("message", "Đã xảy ra lỗi: " + e.getMessage());
-        }
+            status = false;
+            mess = "Đã có lỗi xảy ra: " + e.getMessage();
+            e.printStackTrace(); // Log the error for debugging
 
+        }
+        jsonResponse.addProperty("success", status);
+        jsonResponse.addProperty("message", mess);
+
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(gson.toJson(jsonResponse));
     }
 }

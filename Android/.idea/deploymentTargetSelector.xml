@@ -2,12 +2,12 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
-      <SelectionState runConfigName="Unnamed">
+      <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-06-24T17:44:15.784280800Z">
+        <DropdownSelection timestamp="2024-07-01T18:24:27.363461500Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=SK8DDUL7WKFIBUS4" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\vietn\.android\avd\Pixel_4_API_TiramisuPrivacySandbox.avd" />
             </handle>
           </Target>
         </DropdownSelection>

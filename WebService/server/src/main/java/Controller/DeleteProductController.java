@@ -16,23 +16,29 @@ public class DeleteProductController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int id = Integer.parseInt(req.getParameter("id"));
-        ProductDAO dao = new ProductDAO();
+        ProductDAO productDAO = new ProductDAO();
         Gson gson = new Gson();
         JsonObject jsonResponse = new JsonObject();
-
+        boolean status;
+        String mess;
+        int rowsAffected = productDAO.deleteProduct(id);
         try {
-            int rowsAffected = dao.deleteProduct(id);
             if (rowsAffected > 0) {
-                jsonResponse.addProperty("success", true);
-                jsonResponse.addProperty("message", "Xóa sản phẩm thành công");
+                status = true;
+                mess = "Thành công";
             } else {
-                jsonResponse.addProperty("success", false);
-                jsonResponse.addProperty("message", "Không tìm thấy sản phẩm để xóa");
+                status = false;
+                mess = "Thất bại";
             }
         } catch (Exception e) {
-            jsonResponse.addProperty("success", false);
-            jsonResponse.addProperty("message", "Đã xảy ra lỗi: " + e.getMessage());
+            status = false;
+            mess = "Đã có lỗi xảy ra: " + e.getMessage();
+            e.printStackTrace(); // Log the error for debugging
+
         }
+        jsonResponse.addProperty("success", status);
+        jsonResponse.addProperty("message", mess);
+
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().write(gson.toJson(jsonResponse));

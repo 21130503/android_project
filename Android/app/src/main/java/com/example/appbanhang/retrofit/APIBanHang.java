@@ -90,7 +90,21 @@ public interface APIBanHang {
             @Field("description") String description,
             @Field("type") int type
     );
+    @POST("updateProduct")
+    @FormUrlEncoded
+    Observable<ProductModel> updateProduct(
+            int productId, @Field("name") String name,
+            @Field("price") String price,
+            @Field("image") String image,
+            @Field("description") String description,
+            @Field("type") int type
+    );
 
+    @POST("deleteProduct")
+    @FormUrlEncoded
+    Observable<ProductModel> deleteProduct(
+            @Field("id") int id
+    );
     @Multipart
     @POST("upload")
     Call<ProductModel> uploadFile(@Part MultipartBody.Part file);

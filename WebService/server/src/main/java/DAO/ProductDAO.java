@@ -119,8 +119,9 @@ public class ProductDAO {
         }
         return rowsDeleted;
     }
-    public int editProduct(Product product) {
+    public int updateProduct(Product product) {
         Connection connection = null;
+        ProductDAO productDAO = new ProductDAO();
         try {
             connection = Connect.getConnection();
             String sql = "UPDATE product SET name=?, price=?, description=?, image=?, type=? WHERE id=?";
@@ -131,19 +132,10 @@ public class ProductDAO {
             preparedStatement.setString(4, product.getImage());
             preparedStatement.setInt(5, product.getType());
             preparedStatement.setInt(6, product.getId());
-            int rowsUpdated = preparedStatement.executeUpdate();
-            return rowsUpdated;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            int update = preparedStatement.executeUpdate();
+            return update;
+        }catch (SQLException e){
+            throw  new RuntimeException(e);
         }
     }
-
 }

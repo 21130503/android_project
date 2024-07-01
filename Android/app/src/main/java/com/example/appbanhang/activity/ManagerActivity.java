@@ -53,6 +53,22 @@ public class ManagerActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        updateProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UpdateProductActivity.class);
+                intent.putExtra("product_id", 1);
+                startActivity(intent);
+            }
+        });
+        deleteProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DeleteProductActivity.class);
+                intent.putExtra("product_id", 1);
+                startActivity(intent);
+            }
+        });
         viewOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
