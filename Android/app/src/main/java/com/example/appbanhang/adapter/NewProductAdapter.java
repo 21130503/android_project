@@ -2,6 +2,7 @@ package com.example.appbanhang.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +17,12 @@ import com.bumptech.glide.Glide;
 import com.example.appbanhang.Interface.ItemClickListener;
 import com.example.appbanhang.R;
 import com.example.appbanhang.activity.DetailActivity;
+import com.example.appbanhang.model.EventBus.EditDeleteEvent;
 import com.example.appbanhang.model.NewProduct;
 import com.example.appbanhang.model.Product;
 import com.example.appbanhang.utils.Utils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -55,7 +59,7 @@ public class NewProductAdapter extends RecyclerView.Adapter<NewProductAdapter.My
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int pos, boolean isLongClick) {
-                if(!isLongClick ){
+                if (!isLongClick) {
 
                     Intent intent = new Intent(context, DetailActivity.class);
                     intent.putExtra("detail", newProduct);

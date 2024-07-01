@@ -105,5 +105,45 @@ public class ProductDAO {
         }
     }
 
+    public int deleteProduct(int id) {
+        Connection connection = null;
+        int rowsDeleted;
+        try {
+            connection = Connect.getConnection();
+            String sql = "DELETE FROM product WHERE id=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            rowsDeleted = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return rowsDeleted;
+    }
+    public int editProduct(Product product) {
+        Connection connection = null;
+        try {
+            connection = Connect.getConnection();
+            String sql = "UPDATE product SET name=?, price=?, description=?, image=?, type=? WHERE id=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, product.getName());
+            preparedStatement.setInt(2, product.getPrice());
+            preparedStatement.setString(3, product.getDescription());
+            preparedStatement.setString(4, product.getImage());
+            preparedStatement.setInt(5, product.getType());
+            preparedStatement.setInt(6, product.getId());
+            int rowsUpdated = preparedStatement.executeUpdate();
+            return rowsUpdated;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }
