@@ -29,6 +29,8 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        dataBinding = true
+
     }
 }
 
@@ -38,8 +40,15 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.activity:activity:1.9.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
     implementation(libs.firebase.auth)
     implementation(libs.firebase.messaging)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

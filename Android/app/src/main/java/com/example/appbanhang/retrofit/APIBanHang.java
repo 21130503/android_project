@@ -1,5 +1,8 @@
 package com.example.appbanhang.retrofit;
 
+import android.os.Message;
+
+import com.example.appbanhang.model.MessageModel;
 import com.example.appbanhang.model.NewProductModel;
 import com.example.appbanhang.model.OrderModel;
 import com.example.appbanhang.model.ProductModel;
@@ -78,6 +81,21 @@ public interface APIBanHang {
     @GET("search")
     Observable<ProductModel> getSearch(
             @Query("key") String key
+    );
+    @POST("delete")
+    Observable<MessageModel> deleteProduct(
+            @Field("id") int id
+    );
+  
+    @POST("edit")
+    @FormUrlEncoded
+    Observable<MessageModel> editProduct(
+            @Field("nameProduct") String nameProduct,
+            @Field("price") String price,
+            @Field("img") String img,
+            @Field("description") String description,
+            @Field("type") int type,
+            @Field("id") int id
     );
     @POST("create-order")
     @FormUrlEncoded

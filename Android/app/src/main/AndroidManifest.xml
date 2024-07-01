@@ -18,6 +18,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.AddProductActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.TypeProductActivity"
             android:exported="false"
             android:theme="@style/Theme.AppBanHang" />
@@ -33,11 +36,6 @@
         <activity
             android:name=".activity.ResetPassActivity"
             android:exported="false" />
-
-=======
-<!--        <activity-->
-<!--            android:name=".ResetPassActivity"-->
-<!--            android:exported="false" />-->
         <activity
             android:name=".activity.CheckoutActivity"
             android:exported="false" />

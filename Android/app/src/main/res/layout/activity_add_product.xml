@@ -23,12 +23,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/name_product"
             android:hint="Tên sản phẩm"
+
             android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
+
         android:id="@+id/line_2"
 
         app:layout_constraintTop_toBottomOf="@+id/line_1"
@@ -39,6 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/price"
             android:hint="Giá sản phẩm"
             android:inputType="text"
             android:layout_width="match_parent"
@@ -55,6 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/description"
             android:hint="Mô tả"
             android:inputType="text"
             android:layout_width="match_parent"
@@ -71,11 +76,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/img"
             android:hint="Ảnh sản phẩm"
             android:inputType="text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
-
+    <Spinner
+        android:id="@+id/spinner_type"
+        app:layout_constraintTop_toBottomOf="@id/line4"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnproduct"
+        app:layout_constraintTop_toBottomOf="@id/spinner_type"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="Thêm SP"
+        android:background="#B2B4C1"
+        android:textAllCaps="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
