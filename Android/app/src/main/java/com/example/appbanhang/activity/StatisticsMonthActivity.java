@@ -42,9 +42,8 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class StatisticsActivity extends AppCompatActivity {
+public class StatisticsMonthActivity extends AppCompatActivity {
     Toolbar toolbar;
-    PieChart pieChart;
     BarChart barChart;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     APIBanHang apiBanHang;
@@ -54,7 +53,7 @@ public class StatisticsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_statistics);
+        setContentView(R.layout.activity_statistics_month);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -63,12 +62,12 @@ public class StatisticsActivity extends AppCompatActivity {
         apiBanHang = RetrofitClient.getInstance(Utils.BASR_URL).create(APIBanHang.class);
 //        ActionToolBar();
         Mapping();
-        getStatistics();
         settingBarChart();
+        getStatisticsMonth();
     }
 
     private void settingBarChart() {
-        barChart.getDescription().setEnabled(false);
+//        barChart.getDescription().setEnabled(false);
         barChart.setDrawValueAboveBar(false);
         XAxis xAxis = barChart.getXAxis();
         xAxis.setAxisMinimum(1);
@@ -79,27 +78,9 @@ public class StatisticsActivity extends AppCompatActivity {
         yAxisLeft.setAxisMinimum(0);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_statistics, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-       if(id == R.id.statistics_Id){
-           getStatisticsMonth();
-           return  true;
-       }else{
-           return  super.onOptionsItemSelected(item);
-       }
-    }
 
     private void getStatisticsMonth() {
-        barChart.setVisibility(View.VISIBLE);
-        pieChart.setVisibility(View.GONE);
         compositeDisposable.add(apiBanHang.getStatisticsByMonth()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -131,56 +112,9 @@ public class StatisticsActivity extends AppCompatActivity {
                 ));
     }
 
-    private void getStatistics() {
-        List<PieEntry> list = new ArrayList<>();
-        compositeDisposable.add(apiBanHang.getStatistics()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        productModel -> {
-                            if(productModel.isSuccess()){
-                                for (int i = 0; i < productModel.getResults().size(); i++) {
-                                    String nameProduct = productModel.getResults().get(i).getName();
-                                    int total = productModel.getResults().get(i).getCount();
-                                    list.add(new PieEntry(total, nameProduct));
-                                }
-                                PieDataSet pieDataSet = new PieDataSet(list, "Thống kê sản phẩm ");
-                                PieData pieData = new PieData();
-                                pieData.setDataSet(pieDataSet);
-                                pieData.setValueTextSize(12f);
-                                pieData.setValueFormatter(new PercentFormatter(pieChart));
-                                pieDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-
-                                pieChart.setData(pieData);
-                                pieChart.animateXY(2000,2000);
-                                pieChart.setUsePercentValues(true);
-                                pieChart.getDescription().setEnabled(false);
-                                pieChart.invalidate();
-                                Toast.makeText(getApplicationContext(), "Thành công lấy", Toast.LENGTH_LONG).show();
-
-
-                            }
-                        },
-                        throwable -> {
-                            Log.e("API_ERROR", "Error connecting to server", throwable);
-                            Toast.makeText(getApplicationContext(), "Không kết nối được với server: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                ));
-    }
-
-//    private void ActionToolBar() {
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
 //    }
     private  void  Mapping(){
-        toolbar =findViewById(R.id.toolbar_statistics);
-        pieChart = findViewById(R.id.chart);
+        toolbar =findViewById(R.id.toolbar_statistics_month);
         barChart = findViewById(R.id.barchart);
     }
 

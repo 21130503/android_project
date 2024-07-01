@@ -17,7 +17,7 @@ import com.example.appbanhang.R;
 import soup.neumorphism.NeumorphCardView;
 
 public class ManagerActivity extends AppCompatActivity {
-    NeumorphCardView addProduct, updateProduct, deleteProduct, viewOrder, statistics, chatManager;
+    NeumorphCardView addProduct, updateProduct, deleteProduct, viewOrder, statistics, chatManager, statictisMonth;
     Toolbar toolbarManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +91,13 @@ public class ManagerActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        statictisMonth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), StatisticsMonthActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void Mapping() {
@@ -101,6 +108,7 @@ public class ManagerActivity extends AppCompatActivity {
         viewOrder = findViewById(R.id.view_order);
         statistics = findViewById(R.id.statistic);
         chatManager = findViewById(R.id.chat_manager);
+        statictisMonth = findViewById(R.id.statistic_total_month);
 
     }
 }
