@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                                     typeProducts.add(new TypeProduct(200, "Quản lí","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
 
                                 }
-                                typeProducts.add(new TypeProduct(300, "Đăng xuất","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRO0TX2jK340clC6Pje4lC4ikd7L8Vzhb091w&s"));
+                                typeProducts.add(new TypeProduct(300, "Đăng xuất","https://png.pngtree.com/png-vector/20190917/ourlarge/pngtree-logout-icon-vectors-png-image_1737872.jpg"));
 //                                typeProducts.add()
                                 System.out.println(typeProducts.size());
                                 System.out.println(typeProducts);

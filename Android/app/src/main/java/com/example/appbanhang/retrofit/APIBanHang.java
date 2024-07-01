@@ -91,4 +91,6 @@ public interface APIBanHang {
     );
     @GET("product-statistics")
     Observable<NewProductModel> getStatistics();
+    @GET("get-statistics-by-month")
+    Observable<OrderModel> getStatisticsByMonth();
 }

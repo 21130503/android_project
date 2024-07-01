@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDAO {
+    java.util.Date utilDate = new java.util.Date();
+    java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
     Gson gson = new Gson();
     int idOrder = 0;
     UserDAO userDAO = new UserDAO();
@@ -64,15 +66,17 @@ public int mainOrder(String idUser, String address, String totalPrice) {
     Connection connection = null;
     ResultSet resultSet = null;
     User user = userDAO.getUserById(idUser);
+    long totalPriceLong = Long.parseLong(totalPrice.replace("," ,""));
     try {
         connection = Connect.getConnection();
-        String sql = "INSERT INTO orderproduct(idUser, address, phoneNumber, totalPrice, status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO orderproduct(idUser, address, phoneNumber, totalPrice, status,createdAt) VALUES (?, ?, ?, ?, ?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setInt(1, Integer.parseInt(idUser));
         preparedStatement.setString(2, address);
         preparedStatement.setString(3, user.getPhoneNumber());
-        preparedStatement.setString(4, totalPrice);
+        preparedStatement.setLong(4, totalPriceLong);
         preparedStatement.setString(5, "Đang chuẩn bị");
+        preparedStatement.setDate(6, sqlDate);
 
         int check = preparedStatement.executeUpdate();
         if (check > 0) {
@@ -148,8 +152,30 @@ public int mainOrder(String idUser, String address, String totalPrice) {
                 order.setStatus(resultSet.getString("status"));
                 order.setAddress(resultSet.getString("address"));
                 order.setPhoneNumber(resultSet.getString("phoneNumber"));
-                order.setTotal(resultSet.getString("totalPrice"));
+                order.setTotal(resultSet.getLong("totalPrice"));
                 order.setProducts(this.getCt_Order(resultSet.getInt("id")).getProductList());
+                orders.add(order);
+            }
+            return  orders;
+        }
+        catch (SQLException e) {
+            throw  new RuntimeException(e);
+        }
+    }
+    public List<Order> getStatisticsByMonth(){
+        Connection connection = null;
+        List<Order> orders = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
+        try{
+            connection = Connect.getConnection();
+            String sql = "SELECT id, SUM(totalPrice) as totalPrice, Month(createdAt) as createdAt FROM orderproduct GROUP BY YEAR(createdAt), Month(createdAt)";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                Order order = new Order();
+                order.setId(resultSet.getInt("id"));
+                order.setTotal(resultSet.getLong("totalPrice"));
+                order.setMonth(resultSet.getInt("createdAt"));
                 orders.add(order);
             }
             return  orders;
@@ -216,7 +242,7 @@ public int mainOrder(String idUser, String address, String totalPrice) {
                 order.setStatus(resultSet.getString("status"));
                 order.setAddress(resultSet.getString("address"));
                 order.setPhoneNumber(resultSet.getString("phoneNumber"));
-                order.setTotal(resultSet.getString("totalPrice"));
+                order.setTotal(resultSet.getLong("totalPrice"));
                 order.setProducts(this.getCt_Order(resultSet.getInt("id")).getProductList());
                 orders.add(order);
             }
