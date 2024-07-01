@@ -132,16 +132,17 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(home);
                         break;
                     case 1:
-                        Intent laptop = new Intent(getApplicationContext(), PhoneActivity.class);
-                        laptop.putExtra("type",2);
 
-                        startActivity(laptop);
-                        break;
-                    case 2:
                         Intent phone = new Intent(getApplicationContext(), PhoneActivity.class);
                         phone.putExtra("type",1);
 
                         startActivity(phone);
+                        break;
+                    case 2:
+                        Intent laptop = new Intent(getApplicationContext(), LaptopActivity.class);
+                        laptop.putExtra("type",2);
+
+                        startActivity(laptop);
                         break;
                     case 3:
                         Intent viewOrder = new Intent(getApplicationContext(), ViewOrder.class);
